@@ -1,6 +1,14 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
-import './assets/scss/main.scss';
+import './assets/styles.css';
+import AppNavigation from './components/layouts/AppNavigation.vue';
+import AppFooter from './components/layouts/AppFooter.vue';
 
-createApp(App).use(router).mount('#app');
+const app = createApp(App);
+
+app.component('AppNavigation', AppNavigation);
+app.component('AppFooter', AppFooter);
+
+app.use(router);
+app.mount('#app');

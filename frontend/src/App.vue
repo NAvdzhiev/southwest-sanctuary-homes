@@ -1,14 +1,16 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <AppNavigation/>
+  <main class="container">
+    <router-view/>
+  </main>
+  <AppFooter/>
 </template>
 
-<style>
-body {
-  background-color: #DFD6C5;
-  color: #070000;
+<style scoped>
+main.container {
+  max-width: 100%;
+  padding: 0 48px;
 }
 </style>
+
+
