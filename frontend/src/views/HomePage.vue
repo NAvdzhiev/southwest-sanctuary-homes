@@ -1,3 +1,15 @@
 <template>
-    <h1>Home Page</h1>
+    <HeroSection/>
 </template>
+
+<script>
+import HeroSection from '@/components/Home/HeroSection.vue';
+export default {
+    components: {
+        HeroSection
+    },
+    setup() {
+        
+    },
+}
+</script>
