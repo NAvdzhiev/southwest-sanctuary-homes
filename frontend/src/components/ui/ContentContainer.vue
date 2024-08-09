@@ -1,0 +1,102 @@
+<template>
+    <div :class="containerClasses">
+        <div class="content">
+            <h2>{{ heading }}</h2>
+            <p>{{ text }}</p>
+            <AppButton :text="buttonText" :to="buttonLink" :variant="buttonVariant" @click="handleButtonClick"/>
+        </div>
+        <img :src="require(`@/assets/images/${imageSrc}`)" :alt="heading" class="content-image" />
+    </div>
+
+</template>
+
+<script setup>
+import AppButton from './AppButton.vue';
+import {defineProps, defineEmits, computed } from 'vue';
+
+const props = defineProps({
+    heading: {
+        type: String,
+        required: true
+    },
+    text: {
+        type: String,
+        required: true,
+    },
+    buttonText: {
+        type: String,
+        required: true,
+        default: 'Button'
+    },
+    buttonLink: {
+        type: [String, Object],
+        required: false,
+        default: null
+    },
+    imageSrc: {
+        type: String,
+        required: false,
+        default: null
+    },
+    reverse: {
+        type: Boolean,
+        required: false,
+        default: false
+    }
+});
+
+const emits = defineEmits(['button-click']);
+
+const containerClasses = computed(() => {
+    return {
+        'content-container': true,
+        'reverse-layour': props.reverse
+    }
+});
+
+const handleButtonClick = (event) => {
+    emits('button-click', event);
+}
+
+</script>
+
+<style scoped>
+.content-container {
+    display: flex;
+    align-items: center;
+    margin: 300px 0 150px;
+    height: auto;
+    background-color: var(--container-color);
+    border-radius: 24px;
+    padding: 30px;
+    gap: 180px;
+}
+
+.content {
+    flex: 1;
+    width: 90%;
+}
+
+.content > h2 {
+    font-size: 48px;
+    font-weight: 500;
+}
+
+.content > p {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 27px;
+}
+
+.content-image {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    border-radius: 12px;
+}
+
+.reverse-layout {
+  flex-direction: row-reverse;
+}
+
+</style>

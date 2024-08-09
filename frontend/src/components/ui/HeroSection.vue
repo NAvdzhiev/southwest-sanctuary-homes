@@ -5,7 +5,7 @@
             <h1>Sanctuary Homes</h1>
             <p>Your Gateway to Southwest Style and Comfort!</p>
         </div>
-        <img src="../../assets/images/hero-image.png" alt="Hero Background" class="hero-image" />
+        <img src="../../assets/images/hero-image.webp" alt="Hero Background" class="hero-image" />
         <button>
             <i class="fa-solid fa-arrow-down"></i>
         </button>
@@ -15,10 +15,10 @@
 <style scoped>
 .hero-section {
   position: relative;
-  height: 100vh; /* Full viewport height */
+  height: 100vh; 
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
+  justify-content: center; 
+  align-items: center; 
 }
 
 .hero-image {
@@ -27,9 +27,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Cover the section area */
-  z-index: -1; /* Place behind the text */
+  object-fit: cover; 
+  z-index: -1; 
   border-radius: 24px;
+  filter: sepia(28%);
 }
 
 .hero-content {
@@ -73,7 +74,7 @@
 .hero-section button > i {
     font-size: 32px;
     color: var(--text-color-dark);
-    animation: bounce 1s infinite; /* Animation for the arrow */
+    animation: bounce 1s infinite; 
 }
 
 @keyframes bounce {
@@ -81,7 +82,7 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(10px); /* Adjust the distance of bounce */
+    transform: translateY(10px);
   }
   100% {
     transform: translateY(0);
