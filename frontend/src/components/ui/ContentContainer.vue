@@ -12,7 +12,7 @@
 
 <script setup>
 import AppButton from './AppButton.vue';
-import {defineProps, defineEmits, computed } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps({
     heading: {
@@ -50,7 +50,7 @@ const emits = defineEmits(['button-click']);
 const containerClasses = computed(() => {
     return {
         'content-container': true,
-        'reverse-layour': props.reverse
+        'reverse-layout': props.reverse
     }
 });
 
@@ -69,7 +69,7 @@ const handleButtonClick = (event) => {
     background-color: var(--container-color);
     border-radius: 24px;
     padding: 30px;
-    gap: 180px;
+    gap: 200px;
 }
 
 .content {
@@ -91,12 +91,13 @@ const handleButtonClick = (event) => {
 .content-image {
     width: 100%;
     max-width: 420px;
-    height: auto;
+    height: 570px;
     border-radius: 12px;
 }
 
 .reverse-layout {
   flex-direction: row-reverse;
+  text-align: right;
 }
 
 </style>
