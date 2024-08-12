@@ -5,7 +5,7 @@
             <p>{{ text }}</p>
             <AppButton :text="buttonText" :to="buttonLink" :variant="buttonVariant" @click="handleButtonClick"/>
         </div>
-        <img :src="require(`@/assets/images/${imageSrc}`)" :alt="heading" class="content-image" />
+        <img :src="imageUrl" :alt="heading" class="content-image" />
     </div>
 
 </template>
@@ -53,6 +53,10 @@ const containerClasses = computed(() => {
         'reverse-layout': props.reverse
     }
 });
+
+const imageUrl = computed(() => {
+    return require(`@/assets/images/${props.imageSrc}`);
+})
 
 const handleButtonClick = (event) => {
     emits('button-click', event);

@@ -7,6 +7,7 @@ import LoginPage from '@/views/LoginPage.vue';
 import NotFound from '@/views/NotFound.vue';
 import PropertyDetails from '@/views/Properties/PropertyDetails.vue';
 import PropertyList from '@/views/Properties/PropertyList.vue';
+import WishList from '@/views/WishList.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
@@ -47,6 +48,11 @@ const routes = [
 				component: QuizSummary,
 			},
 		],
+	},
+	{
+		path: '/wishlist',
+		name: 'Wishlist',
+		component: WishList,
 	},
 	{
 		path: '/login',

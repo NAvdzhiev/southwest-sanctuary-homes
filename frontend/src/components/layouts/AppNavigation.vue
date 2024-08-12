@@ -25,7 +25,12 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
             <button class="icon-button">
-                <i class="fa-regular fa-heart"></i>
+                <router-link to="/wishlist">
+                  <i class="fa-regular fa-heart"></i>
+                </router-link>
+                <div v-if="wishlistItemsCount > 0" class="wishlist-items-count">
+                  <h6>{{ wishlistItemsCount }}</h6>
+                </div>
             </button>
             <button class="icon-button">
                 <i class="fa-regular fa-user"></i>
@@ -34,12 +39,13 @@
     </header>
 </template>
 
-<script>
-export default {
-    setup() {
-        
-    },
-}
+<script setup>
+import { computed } from 'vue';
+import { useWishlistStore } from '@/store/wishlistStore';
+
+const wishlistStore = useWishlistStore();
+const wishlistItemsCount = computed(() => { return wishlistStore.getWishlistCount() })
+
 </script>
 
 <style scoped>
@@ -84,9 +90,27 @@ export default {
   background: none;
   border: none;
   cursor: pointer;
+  position: relative;
 }
 
 .icon-button i {
   font-size: 24px; /* Adjust as needed */
+}
+
+.wishlist-items-count {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  padding: 2px;
+  min-width: 10px;
+  height: 10px;
+  font-size: 11px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+}
+
+.wishlist-items-count h6 {
+  margin: 0;
+  line-height: 1.25;
 }
 </style>

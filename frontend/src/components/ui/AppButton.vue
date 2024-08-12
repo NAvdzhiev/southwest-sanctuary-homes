@@ -66,6 +66,7 @@
     color: var(--text-color-dark);
     display: inline-block;
     margin: 30px 0;
+    border: 2px solid var(--accent-color);
     }
   </style>
   

@@ -1,9 +1,9 @@
 <template>
-    <div class="property-card">
+    <article class="property-card">
         <div class="property-card__imageContainer">
-            <img class="property-card__image" :src="require(`@/assets/images/${imageSrc}`)" :alt="title">
-            <button class="property-card__whishlist">
-                <i class="fa-regular fa-heart"></i>
+            <img class="property-card__image" :src="imageUrl" :alt="title">
+            <button class="property-card__whishlist" @click="toggleWishlist">
+                <i :class="isInWishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
             </button>
         </div>
         <h3 class="property-card__title">{{ title }}</h3>
@@ -30,11 +30,12 @@
                 <i class="fa-solid fa-arrow-right"></i>
             </router-link>
         </div>
-    </div>
+    </article>
 </template>
 
 <script setup>
-    import { toRefs } from 'vue';
+    import { toRefs, computed } from 'vue';
+    import { useWishlistStore } from '@/store/wishlistStore';
 
     const props = defineProps({
         imageSrc: {
@@ -68,6 +69,22 @@
 
     });
 
+    const wishlistStore = useWishlistStore();
+
+    const isInWishlist = computed(() => wishlistStore.isInWishlist(id));
+
+    function toggleWishlist() {
+        if (isInWishlist.value) {
+            wishlistStore.removeFromWishlist(id);
+        } else {
+            wishlistStore.addToWishlist({imageSrc, title, bedrooms, bathrooms, footage, price, id});
+        }
+    }
+
+    const imageUrl = computed(() => {
+        return require(`@/assets/images/${imageSrc.value}`);
+    });
+
     const { imageSrc, title, bedrooms, bathrooms, footage, price, id } = toRefs(props);
 </script>
 
@@ -76,7 +93,7 @@
     background-color: var(--container-color);
     border-radius: 24px;
     padding: 20px;
-    width: 320px;
+    width: auto;
     height: 520px;
 }
 
@@ -111,12 +128,13 @@
     font-size: 22px;
     position: relative;
     top: 1px;
+    cursor: pointer;
 }
 
 .property-card__info {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    margin-top: 50px;
+    margin-top: 30px;
 }
 
 .property-card__icon {
@@ -132,7 +150,7 @@
 }
 
 .property-card__icon h5 {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 400;
 }
 
@@ -140,7 +158,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 50px;
+    margin-top: 30px;
 }
 
 .property-card__tools a {

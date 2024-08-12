@@ -85,12 +85,10 @@
     background-color: var(--footer-color);
     color: #fff;
     padding: 50px 0;
-    position: sticky;
+    position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
   }
 
   .footer h4 {
