@@ -57,7 +57,7 @@ const wishlistItemsCount = computed(() => { return wishlistStore.getWishlistCoun
 }
 
 .header__logo img {
-  height: 40px; /* Adjust as needed */
+  height: 40px; 
 }
 
 .header__links {
@@ -94,7 +94,7 @@ const wishlistItemsCount = computed(() => { return wishlistStore.getWishlistCoun
 }
 
 .icon-button i {
-  font-size: 24px; /* Adjust as needed */
+  font-size: 24px; 
 }
 
 .wishlist-items-count {
