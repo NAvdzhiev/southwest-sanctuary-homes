@@ -1,16 +1,13 @@
 <template>
 	<div class="form-container">
 		<h2>{{ formTitle }}</h2>
-		<form class="app-form" @submit.prevent="handleSubmit">
+		<form class="app-form" @submit.prevent="handleSubmit" :class="formClasses">
 			<div v-for="(field, i) in fields" :key="i" class="form-group">
 				<label :for="field.name">{{ field.label }}</label>
+
+				<!-- Input Fields -->
 				<input
-					v-if="
-						field.type === 'text' ||
-						field.type === 'password' ||
-						field.type === 'email' ||
-						field.type === 'tel'
-					"
+					v-if="['text', 'password', 'email', 'tel'].includes(field.type)"
 					v-model="formData[field.name]"
 					:type="field.type"
 					:id="field.name"
@@ -20,6 +17,8 @@
 					:class="{ 'is-invalid': errors[field.name] }"
 					class="form-control"
 				/>
+
+				<!-- Number Input -->
 				<input
 					v-if="field.type === 'number'"
 					v-model.number="formData[field.name]"
@@ -33,6 +32,8 @@
 					:class="{ 'is-invalid': errors[field.name] }"
 					class="form-control"
 				/>
+
+				<!-- Textarea -->
 				<textarea
 					v-if="field.type === 'textarea'"
 					v-model="formData[field.name]"
@@ -44,6 +45,7 @@
 					class="form-control"
 				></textarea>
 
+				<!-- Select Dropdown -->
 				<select
 					v-if="field.type === 'select'"
 					v-model="formData[field.name]"
@@ -61,9 +63,12 @@
 						{{ option.text }}
 					</option>
 				</select>
+
+				<!-- File Upload -->
 				<input
 					v-if="field.type === 'file'"
 					type="file"
+					multiple
 					:id="field.name"
 					:name="field.name"
 					@change="handleFileUpload(field.name, $event)"
@@ -71,17 +76,20 @@
 					class="form-control"
 				/>
 
+				<!-- Error Message -->
 				<div v-if="errors[field.name]" class="invalid-field-error">
 					{{ errors[field.name] }}
 				</div>
 			</div>
+
+			<!-- Submit Button -->
 			<AppButton is="button" :text="submitText" />
 		</form>
 	</div>
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, computed } from 'vue';
 import AppButton from './AppButton.vue';
 
 const props = defineProps({
@@ -97,6 +105,7 @@ const props = defineProps({
 		type: String,
 		default: 'Form',
 	},
+	formClasses: String,
 });
 
 const formData = reactive({});
@@ -106,6 +115,10 @@ const emit = defineEmits(['handleSubmit', 'submit']);
 props.fields.forEach((field) => {
 	formData[field.name] = field.default || '';
 	errors[field.name] = null;
+});
+
+const formClasses = computed(() => {
+	return props.fields.length > 5 ? 'two-column-form' : '';
 });
 
 const handleSubmit = () => {
@@ -121,7 +134,19 @@ const handleSubmit = () => {
 	});
 
 	if (valid) {
-		emit('submit', formData);
+		const formDataObj = new FormData();
+		Object.keys(formData).forEach((key) => {
+			if (Array.isArray(formData[key])) {
+				// If it's an array (e.g., files), append each file separately
+				formData[key].forEach((file) => {
+					formDataObj.append(key, file);
+				});
+			} else {
+				formDataObj.append(key, formData[key]);
+			}
+		});
+
+		emit('submit', formDataObj);
 	}
 };
 
@@ -157,25 +182,27 @@ const validateField = (fieldName) => {
 	}
 
 	if (field.type === 'file' && field.validation) {
-		const file = value;
-		if (file) {
-			if (
-				field.validation.allowedTypes &&
-				!field.validation.allowedTypes.includes(file.type)
-			) {
-				errors[
-					fieldName
-				] = `Invalid file type. Allowed types: ${field.validation.allowedTypes.join(
-					', ',
-				)}`;
-				return false;
-			}
+		const files = value; // Array of files
+		if (files.length > 0) {
+			for (const file of files) {
+				if (
+					field.validation.allowedTypes &&
+					!field.validation.allowedTypes.includes(file.type)
+				) {
+					errors[
+						fieldName
+					] = `Invalid file type. Allowed types: ${field.validation.allowedTypes.join(
+						', ',
+					)}`;
+					return false;
+				}
 
-			if (field.validation.maxSize && file.size > field.validation.maxSize) {
-				errors[fieldName] = `File size must be less than ${
-					field.validation.maxSize / 1024 / 1024
-				} MB.`;
-				return false;
+				if (field.validation.maxSize && file.size > field.validation.maxSize) {
+					errors[
+						fieldName
+					] = `File size must be less than ${field.validation.maxSize} MB.`;
+					return false;
+				}
 			}
 		}
 	}
@@ -184,8 +211,8 @@ const validateField = (fieldName) => {
 };
 
 const handleFileUpload = (fieldName, event) => {
-	const file = event.target.files[0];
-	formData[fieldName] = file;
+	const files = Array.from(event.target.files);
+	formData[fieldName] = files; // Store the array of files in formData
 	validateField(fieldName);
 };
 </script>
@@ -198,6 +225,12 @@ const handleFileUpload = (fieldName, event) => {
 	padding: 30px 50px;
 	border-radius: 24px;
 }
+
+/* .two-column-form {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+  } */
 
 .form-container h2 {
 	text-align: center;

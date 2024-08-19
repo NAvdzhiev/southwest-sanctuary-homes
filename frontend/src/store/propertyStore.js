@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import api from '../axios';
 
 export const usePropertyStore = defineStore('property', {
 	state: () => ({
 		properties: [],
-		selectedProperty: null,
+		property: [],
 		sortBy: null,
 		order: 'asc',
 		filterState: null,
@@ -24,7 +24,7 @@ export const usePropertyStore = defineStore('property', {
 					status: this.filterStatus,
 				};
 
-				const response = await axios.get('', { params });
+				const response = await api.get('', { params });
 				this.properties = response.data;
 			} catch (error) {
 				this.error = error.response
@@ -37,8 +37,8 @@ export const usePropertyStore = defineStore('property', {
 		async fetchProperty(id) {
 			this.loading = true;
 			try {
-				const response = await axios.get(`${id}`);
-				this.selectedProperty = response.data;
+				const response = await api.get(`/api/properties/${id}`);
+				this.property = response.data;
 			} catch (error) {
 				this.error = error;
 			} finally {
@@ -48,10 +48,17 @@ export const usePropertyStore = defineStore('property', {
 		async createProperty(propertyData) {
 			this.loading = true;
 			try {
-				await axios.post('', propertyData);
-				await this.fetchProperties();
+				const response = await api.post('/api/properties', propertyData, {
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					},
+				});
+				console.log(response.data);
+
+				//await this.fetchProperties();
 			} catch (error) {
-				this.error = error;
+				this.error = error.response ? error.response.data : error.message;
+				console.error('Error creating property:', this.error);
 			} finally {
 				this.loading = false;
 			}
@@ -59,7 +66,7 @@ export const usePropertyStore = defineStore('property', {
 		async updateProperty(id) {
 			this.loading = true;
 			try {
-				await axios.put(`${id}`);
+				await api.put(`${id}`);
 				await this.fetchProperty(id);
 			} catch (error) {
 				this.error = error;
@@ -70,7 +77,7 @@ export const usePropertyStore = defineStore('property', {
 		async deleteProperty(id) {
 			this.loading = true;
 			try {
-				await axios.delete(`${id}`);
+				await api.delete(`${id}`);
 				await this.fetchProperties();
 			} catch (error) {
 				this.error = error;

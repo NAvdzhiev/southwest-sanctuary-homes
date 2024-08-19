@@ -4,18 +4,18 @@ const Schema = mongoose.Schema;
 const propertySchema = new Schema(
 	{
 		title: { type: String, required: true },
+		images: [{ type: String, required: true }],
 		description: { type: String, required: true },
-		state: { type: String, required: true },
 		footage: { type: Number, required: true },
 		bedrooms: { type: Number, required: true },
 		bathrooms: { type: Number, required: true },
-		price: { type: Number, required: true },
-		state: { type: String, required: true },
+		price: { type: String, required: true },
+		state: { type: String, enum: ['NV', 'CA', 'AZ', 'NM'], required: true },
 		city: { type: String, required: true },
 		address: { type: String, required: true },
-		geolocagtion: {
-			type: { type: String, enum: ['Point'], required: true },
-			coordinates: { type: [Number], required: true },
+		geolocation: {
+			type: String,
+			required: true,
 		},
 		status: { type: String, required: true, default: 'New' },
 		agent: { type: Schema.Types.ObjectId, ref: 'Agent' },

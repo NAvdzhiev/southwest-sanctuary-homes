@@ -1,3 +1,4 @@
+import PropertyForm from '@/views/Admin/PropertyForm.vue';
 import DesignPage from '@/views/Design/DesignPage.vue';
 import QuizStep1 from '@/views/Design/QuizStep1.vue';
 import QuizStep2 from '@/views/Design/QuizStep2.vue';
@@ -58,6 +59,11 @@ const routes = [
 		path: '/login',
 		name: 'Login',
 		component: LoginPage,
+	},
+	{
+		path: '/add-property',
+		name: 'Add New Property',
+		component: PropertyForm,
 	},
 	{
 		path: '/:pathMatch(.*)*',

@@ -5,11 +5,36 @@ const Offer = require('../models/Offer');
 // Add new property
 exports.createProperty = async (req, res) => {
 	try {
-		const property = new Property(req.body);
+		const propertyData = {
+			title: req.body.title,
+			description: req.body.description,
+			state: req.body.state,
+			footage: req.body.footage,
+			bedrooms: req.body.bedrooms,
+			bathrooms: req.body.bathrooms,
+			price: req.body.price,
+			city: req.body.city,
+			address: req.body.address,
+			geolocation: req.body.geolocation,
+			status: req.body.status,
+			agent: req.body.agent,
+			images: [],
+		};
+
+		if (req.files && req.files.length > 0) {
+			propertyData.images = req.files.map(
+				(file) => `/uploads/${file.filename}`,
+			);
+		} else {
+			propertyData.images = [];
+		}
+
+		const property = new Property(propertyData);
 		await property.save();
-		res
-			.status(201)
-			.json({ message: 'Property Created Successfully!' }, property);
+		res.status(201).json({
+			message: 'Property Created Successfully!',
+			property: property,
+		});
 	} catch (error) {
 		res.status(400).json({ message: error.message });
 	}
@@ -46,7 +71,10 @@ exports.getProperties = async (req, res) => {
 exports.getSingleProperty = async (req, res) => {
 	try {
 		const property = await Property.findById(req.params.id);
-		res.status(200).json(property);
+		if (!property) {
+			return res.status(404).json({ message: 'Property not found' });
+		}
+		res.json(property);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}

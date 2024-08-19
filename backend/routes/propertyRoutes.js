@@ -1,5 +1,6 @@
 const express = require('express');
 const { protect, admin } = require('../middleware/auth');
+const upload = require('../middleware/multer');
 const router = express.Router();
 const {
 	createProperty,
@@ -11,13 +12,13 @@ const {
 
 // Property Actions
 router.get('/', getProperties);
-router.get('/:propertyId', getSingleProperty);
-router.post('/', protect, admin, createProperty);
+router.get('/:id', getSingleProperty);
+router.post('/', upload.array('images', 10), createProperty);
 
 // Booking Routes
-router.post('/:propertyId/bookings', createBooking);
+router.post('/:id/bookings', createBooking);
 
 // Offer Routes
-router.post('/:propertyId/offers', createOffer);
+router.post('/:id/offers', createOffer);
 
 module.exports = router;
