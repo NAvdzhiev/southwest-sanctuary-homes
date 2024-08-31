@@ -12,6 +12,8 @@ import PropertyList from '@/views/Properties/PropertyList.vue';
 import WishList from '@/views/WishList.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { useUserStore } from '@/store/userStore';
+import PropertyTab from '@/views/Admin/PropertyTab.vue';
+import UserTab from '@/views/Admin/UserTab.vue';
 
 const routes = [
 	{
@@ -78,6 +80,10 @@ const routes = [
 		path: '/dashboard',
 		name: 'Admin Panel',
 		component: AdminPanel,
+		children: [
+			{ path: 'property-tab', name: 'Property Tab', component: PropertyTab },
+			{ path: 'user-tab', name: 'User Tab', component: UserTab },
+		],
 		metha: {
 			requiresAuth: true,
 		},
