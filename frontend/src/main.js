@@ -5,6 +5,7 @@ import router from './router';
 import './assets/styles.css';
 import AppNavigation from './components/layouts/AppNavigation.vue';
 import AppFooter from './components/layouts/AppFooter.vue';
+import { useUserStore } from './store/userStore';
 
 const app = createApp(App);
 
@@ -15,4 +16,9 @@ app.component('AppFooter', AppFooter);
 
 app.use(pinia);
 app.use(router);
-app.mount('#app');
+
+const userStore = useUserStore();
+
+userStore.init().then(() => {
+	app.mount('#app');
+});

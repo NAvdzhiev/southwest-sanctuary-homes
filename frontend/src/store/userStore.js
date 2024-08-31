@@ -16,7 +16,7 @@ export const useUserStore = defineStore('user', {
 		async login(credentials) {
 			this.loading = true;
 			try {
-				const response = await api.post('', credentials);
+				const response = await api.post('/api/admin/login', credentials);
 				this.token = response.data.token;
 				localStorage.setItem('token', this.token);
 				api.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
@@ -32,10 +32,11 @@ export const useUserStore = defineStore('user', {
 		async fetchUser() {
 			this.loading = true;
 			try {
-				const response = await api.get('');
+				const response = await api.get('/api/admin');
 				this.user = response.data;
 			} catch (error) {
-				this.error = error;
+				this.error =
+					error.response?.data?.message || 'Failed to fetch user data';
 			} finally {
 				this.loading = false;
 			}
@@ -64,6 +65,24 @@ export const useUserStore = defineStore('user', {
 				});
 			} catch (error) {
 				this.error = error.response.data.message;
+			}
+		},
+
+		async init() {
+			if (this.token) {
+				this.loading = true;
+				try {
+					api.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
+					const respone = await api.get('/api/admin');
+					this.user = respone.data;
+				} catch (error) {
+					this.error =
+						error.response?.data?.message || 'Failed to fetch user data';
+					this.token = null;
+					localStorage.removeItem('token');
+				} finally {
+					this.loading = false;
+				}
 			}
 		},
 	},

@@ -1,3 +1,4 @@
+import AdminPanel from '@/views/Admin/AdminPanel.vue';
 import PropertyForm from '@/views/Admin/PropertyForm.vue';
 import DesignPage from '@/views/Design/DesignPage.vue';
 import QuizStep1 from '@/views/Design/QuizStep1.vue';
@@ -10,6 +11,7 @@ import PropertyDetails from '@/views/Properties/PropertyDetails.vue';
 import PropertyList from '@/views/Properties/PropertyList.vue';
 import WishList from '@/views/WishList.vue';
 import { createRouter, createWebHistory } from 'vue-router';
+import { useUserStore } from '@/store/userStore';
 
 const routes = [
 	{
@@ -59,11 +61,26 @@ const routes = [
 		path: '/login',
 		name: 'Login',
 		component: LoginPage,
+		meta: {
+			requiresGuest: true,
+		},
 	},
 	{
 		path: '/add-property',
 		name: 'Add New Property',
 		component: PropertyForm,
+		metha: {
+			requiresAuth: true,
+			requiresAdmin: true,
+		},
+	},
+	{
+		path: '/dashboard',
+		name: 'Admin Panel',
+		component: AdminPanel,
+		metha: {
+			requiresAuth: true,
+		},
 	},
 	{
 		path: '/:pathMatch(.*)*',
@@ -77,22 +94,19 @@ const router = createRouter({
 	routes,
 });
 
-// router.beforeEach((to, from, next) => {
-// 	const isAuthenticated = !!localStorage('token');
-// 	const isAdmin = localStorage.getItem('role') === 'admin';
+router.beforeEach(async (to, from, next) => {
+	const userStore = useUserStore();
 
-// 	if (to.matched.some((record) => record.meta.reqiresAuth)) {
-// 		if (!isAuthenticated) {
-// 			next({ name: 'Login' });
-// 		} else if (
-// 			to.matched.some((record) => record.meta.requiresAdmin) &&
-// 			!isAdmin
-// 		) {
-// 			next({ name: 'Home' });
-// 		} else {
-// 			next();
-// 		}
-// 	}
-// });
+	await userStore.init();
 
+	if (to.meta.requiresAuth && !userStore.isAuthenticated) {
+		next('/login');
+	} else if (to.meta.requiresGuest && userStore.isAuthenticated) {
+		next('/');
+	} else if (to.meta.requiresAdmin && !userStore.isAdmin) {
+		next('/');
+	} else {
+		next();
+	}
+});
 export default router;

@@ -12,11 +12,11 @@
 <script setup>
 import { ref } from 'vue';
 import { useUserStore } from '@/store/userStore';
-//import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import AppForm from '@/components/ui/AppForm.vue';
 
 const userStore = useUserStore();
-//const router = useRouter();
+const router = useRouter();
 
 const fields = ref([
 	{
@@ -44,6 +44,17 @@ const fields = ref([
 ]);
 
 const handleLogin = async (formData) => {
-	console.log(formData);
+	try {
+		await userStore.login(formData);
+
+		userStore.init();
+
+		if (userStore.isAuthenticated) {
+			router.replace('/dashboard');
+		}
+	} catch (error) {
+		console.error('Login error:', error);
+		alert('An error occurred during login. Please try again.');
+	}
 };
 </script>

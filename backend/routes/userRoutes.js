@@ -27,6 +27,6 @@ router.post(
 router.post('/login', loginUser);
 
 // Get User Profile
-router.post('/proflie', protect, getUserProfile);
+router.get('/', protect, getUserProfile);
 
 module.exports = router;
