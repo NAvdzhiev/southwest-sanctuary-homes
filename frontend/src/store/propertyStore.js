@@ -15,16 +15,28 @@ export const usePropertyStore = defineStore('property', {
 
 	actions: {
 		async fetchProperties() {
+			// this.loading = true;
+			// try {
+			// 	const params = {
+			// 		sortBy: this.sortBy,
+			// 		order: this.order,
+			// 		state: this.filterState,
+			// 		status: this.filterStatus,
+			// 	};
+
+			// 	const response = await api.get('', { params });
+			// 	this.properties = response.data;
+			// } catch (error) {
+			// 	this.error = error.response
+			// 		? error.response.data.message
+			// 		: error.message;
+			// } finally {
+			// 	this.loading = false;
+			// }
+
 			this.loading = true;
 			try {
-				const params = {
-					sortBy: this.sortBy,
-					order: this.order,
-					state: this.filterState,
-					status: this.filterStatus,
-				};
-
-				const response = await api.get('', { params });
+				const response = await api.get('api/properties');
 				this.properties = response.data;
 			} catch (error) {
 				this.error = error.response
