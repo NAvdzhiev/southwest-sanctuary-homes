@@ -72,3 +72,16 @@ exports.getUserProfile = async (req, res) => {
 		res.status(500).json({ message: error.message });
 	}
 };
+
+exports.getUsers = async (req, res) => {
+	try {
+		const users = await User.find();
+		if (users) {
+			res.json(users);
+		} else {
+			res.status(404).json({ message: 'No users found!' });
+		}
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
+};

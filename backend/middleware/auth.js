@@ -24,7 +24,7 @@ exports.protect = async (req, res, next) => {
 };
 
 exports.admin = (req, res, next) => {
-	if (req.user && req.user.role === 'admin') {
+	if (req.User && req.User.role === 'admin') {
 		next();
 	} else {
 		res.status(403).json({ message: 'Admin only, access denied' });

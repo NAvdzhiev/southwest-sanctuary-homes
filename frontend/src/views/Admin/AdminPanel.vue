@@ -12,7 +12,11 @@
 				<router-link class="admin-panel__tab" to="/dashboard/property-tab">
 					Properties
 				</router-link>
-				<router-link class="admin-panel__tab" to="/dashboard/user-tab">
+				<router-link
+					v-if="isAdmin"
+					class="admin-panel__tab"
+					to="/dashboard/user-tab"
+				>
 					Users
 				</router-link>
 			</nav>
@@ -28,6 +32,7 @@ import { useUserStore } from '@/store/userStore';
 
 const userStore = useUserStore();
 const user = userStore.user;
+const isAdmin = userStore.isAdmin;
 </script>
 
 <style scoped>

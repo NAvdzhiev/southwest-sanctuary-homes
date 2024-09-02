@@ -32,7 +32,7 @@ export const useUserStore = defineStore('user', {
 		async fetchUser() {
 			this.loading = true;
 			try {
-				const response = await api.get('/api/admin');
+				const response = await api.get('/api/admin/profile');
 				this.user = response.data;
 			} catch (error) {
 				this.error =
@@ -45,10 +45,10 @@ export const useUserStore = defineStore('user', {
 		async fetchUsers() {
 			this.loading = true;
 			try {
-				const response = await api.get('');
+				const response = await api.get('/api/admin/users');
 				this.users = response.data;
 			} catch (error) {
-				this.error = error;
+				error.response?.data?.message || 'Failed to fetch users';
 			} finally {
 				this.loading = false;
 			}
@@ -73,7 +73,7 @@ export const useUserStore = defineStore('user', {
 				this.loading = true;
 				try {
 					api.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
-					const respone = await api.get('/api/admin');
+					const respone = await api.get('/api/admin/profile');
 					this.user = respone.data;
 				} catch (error) {
 					this.error =
