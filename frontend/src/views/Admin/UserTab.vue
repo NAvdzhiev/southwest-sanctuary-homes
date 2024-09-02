@@ -1,6 +1,11 @@
 <template>
 	<div class="table-container">
-		<h1>User Tab</h1>
+		<header class="table-container__header">
+			<h1>User List</h1>
+			<router-link v-if="isAdmin" to="/register">
+				<i class="fa-solid fa-circle-plus"></i>
+			</router-link>
+		</header>
 		<table>
 			<thead>
 				<th>First Name</th>
@@ -40,6 +45,7 @@ onMounted(() => {
 });
 
 const users = computed(() => userStore.users);
+const isAdmin = userStore.isAdmin;
 </script>
 
 <style scoped>
@@ -48,6 +54,17 @@ const users = computed(() => userStore.users);
 	border-radius: 24px;
 	padding: 30px 20px;
 	margin-top: 30px;
+}
+
+.table-container__header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.table-container__header i {
+	font-size: 36px;
+	color: var(--accent-color);
 }
 
 table {

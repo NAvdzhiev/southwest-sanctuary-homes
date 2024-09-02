@@ -1,6 +1,6 @@
 <template>
 	<div class="table-container">
-		<h1>Property Tab</h1>
+		<h1>Property List</h1>
 		<table>
 			<thead>
 				<th>Image</th>

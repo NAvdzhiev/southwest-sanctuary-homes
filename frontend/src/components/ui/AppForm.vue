@@ -181,6 +181,15 @@ const validateField = (fieldName) => {
 		return false;
 	}
 
+	if (field.validation.match) {
+		const matchField = props.fields.find(
+			(f) => f.name === field.validation.match,
+		);
+		if (formData[field.name] !== formData[matchField.name]) {
+			return `${field.label} does not match ${matchField.label}`;
+		}
+	}
+
 	if (field.type === 'file' && field.validation) {
 		const files = value; // Array of files
 		if (files.length > 0) {

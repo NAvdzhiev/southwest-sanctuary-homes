@@ -14,6 +14,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { useUserStore } from '@/store/userStore';
 import PropertyTab from '@/views/Admin/PropertyTab.vue';
 import UserTab from '@/views/Admin/UserTab.vue';
+import RegisterUser from '@/views/Admin/RegisterUser.vue';
 
 const routes = [
 	{
@@ -71,7 +72,16 @@ const routes = [
 		path: '/add-property',
 		name: 'Add New Property',
 		component: PropertyForm,
-		metha: {
+		meta: {
+			requiresAuth: true,
+			requiresAdmin: true,
+		},
+	},
+	{
+		path: '/register',
+		name: 'Register User',
+		component: RegisterUser,
+		meta: {
 			requiresAuth: true,
 			requiresAdmin: true,
 		},
@@ -82,7 +92,12 @@ const routes = [
 		component: AdminPanel,
 		children: [
 			{ path: 'property-tab', name: 'Property Tab', component: PropertyTab },
-			{ path: 'user-tab', name: 'User Tab', component: UserTab },
+			{
+				path: 'user-tab',
+				name: 'User Tab',
+				component: UserTab,
+				meta: { requiresAuth: true, requiresAdmin: true },
+			},
 		],
 		metha: {
 			requiresAuth: true,

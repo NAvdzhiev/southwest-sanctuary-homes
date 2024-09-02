@@ -27,7 +27,7 @@ exports.registerUser = async (req, res) => {
 				email: user.email,
 				phone: user.phone,
 				role: user.role,
-				token: generateToken(user._id),
+				message: 'User registered successfully!',
 			});
 		} else {
 			res.status(400).json({ message: 'Invalid user data!' });

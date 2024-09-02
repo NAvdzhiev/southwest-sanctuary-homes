@@ -24,8 +24,7 @@ const initialFieldsValues = ref({});
 onMounted(async () => {
 	await userStore.fetchUsers();
 
-	//const agents = userStore.users.filter((user) => user.role === 'Agent');
-	const agents = [];
+	const agents = userStore.users.filter((user) => user.role === 'Agent');
 
 	fields.value = [
 		{
