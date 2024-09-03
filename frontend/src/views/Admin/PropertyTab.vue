@@ -1,10 +1,15 @@
 <template>
 	<div class="table-container">
 		<h1>Property List</h1>
+		<div class="table-container__actions">
+			<SortButton />
+			<AppFilter />
+		</div>
 		<table>
 			<thead>
 				<th>Image</th>
 				<th>Name</th>
+				<th>Price</th>
 				<th>Address</th>
 				<th>Location</th>
 				<th>Footage</th>
@@ -28,6 +33,7 @@
 						/>
 					</td>
 					<td>{{ property.title }}</td>
+					<td>{{ property.price }}</td>
 					<td>{{ property.address }}</td>
 					<td>{{ property.city }} {{ property.state }}</td>
 					<td>{{ property.footage }} sqft</td>
@@ -42,12 +48,15 @@
 				</tr>
 			</tbody>
 		</table>
+		<AppPagination />
 	</div>
 </template>
 <script setup>
 import { computed, onMounted } from 'vue';
 import { usePropertyStore } from '@/store/propertyStore';
-
+import SortButton from '@/components/ui/SortButton.vue';
+import AppFilter from '@/components/ui/AppFilter.vue';
+import AppPagination from '@/components/ui/AppPagination.vue';
 const propertyStore = usePropertyStore();
 
 onMounted(() => {
@@ -63,6 +72,12 @@ const properties = computed(() => propertyStore.properties);
 	border-radius: 24px;
 	padding: 30px 20px;
 	margin-top: 30px;
+}
+
+.table-container__actions {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 table {

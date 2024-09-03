@@ -4,27 +4,47 @@ import api from '../axios';
 export const usePropertyStore = defineStore('property', {
 	state: () => ({
 		properties: [],
-		property: [],
-		sortBy: null,
+		totalProperties: 0,
+		totalPages: 0,
+		currentPage: 1,
+		property: null,
+		sortBy: 'createdAt',
 		order: 'asc',
-		filterState: null,
-		filterStatus: null,
+		filterState: '',
+		filterStatus: '',
 		loading: false,
 		error: null,
 	}),
 
 	actions: {
 		async fetchProperties() {
+			this.loading = true;
+			try {
+				const params = {
+					sortBy: this.sortBy,
+					order: this.order,
+					state: this.filterState,
+					status: this.filterStatus,
+					page: this.currentPage,
+					limit: 16,
+				};
+
+				const response = await api.get('/api/properties', { params });
+				this.properties = response.data.properties;
+				(this.totalProperties = response.data.totalProperties),
+					(this.totalPages = response.data.totalPages),
+					(this.currentPage = response.data.currentPage);
+			} catch (error) {
+				this.error = error.response
+					? error.response.data.message
+					: error.message;
+			} finally {
+				this.loading = false;
+			}
+
 			// this.loading = true;
 			// try {
-			// 	const params = {
-			// 		sortBy: this.sortBy,
-			// 		order: this.order,
-			// 		state: this.filterState,
-			// 		status: this.filterStatus,
-			// 	};
-
-			// 	const response = await api.get('', { params });
+			// 	const response = await api.get('api/properties');
 			// 	this.properties = response.data;
 			// } catch (error) {
 			// 	this.error = error.response
@@ -33,19 +53,25 @@ export const usePropertyStore = defineStore('property', {
 			// } finally {
 			// 	this.loading = false;
 			// }
-
-			this.loading = true;
-			try {
-				const response = await api.get('api/properties');
-				this.properties = response.data;
-			} catch (error) {
-				this.error = error.response
-					? error.response.data.message
-					: error.message;
-			} finally {
-				this.loading = false;
-			}
 		},
+
+		setSort(sortBy, order) {
+			this.sortBy = sortBy;
+			this.order = order;
+			this.fetchProperties();
+		},
+
+		setFilter(filterState, filterStatus) {
+			this.filterState = filterState;
+			this.filterStatus = filterStatus;
+			this.fetchProperties();
+		},
+
+		setPage(page) {
+			this.currentPage = page;
+			this.fetchProperties();
+		},
+
 		async fetchProperty(id) {
 			this.loading = true;
 			try {
@@ -108,25 +134,6 @@ export const usePropertyStore = defineStore('property', {
 		},
 	},
 	getters: {
-		sortedByNewest: (state) =>
-			state.properties
-				.slice()
-				.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)),
-		sortedByOldest: (state) =>
-			state.properties
-				.slice()
-				.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)),
-		sortedByPriceLowToHigh: (state) =>
-			state.properties.slice().sort((a, b) => a.price - b.price),
-		sortedByPriceHighToLow: (state) =>
-			state.properties.slice().sort((a, b) => b.price - a.price),
-		filteredByState: (state) =>
-			state.properties.filter((property) =>
-				state.filterState ? property.state === state.filterState : true,
-			),
-		filteredByStatus: (state) =>
-			state.properties.filter((property) =>
-				state.filterState ? property.status === state.filterStatus : true,
-			),
+		sortedAndFilteredProperties: (state) => state.properties,
 	},
 });

@@ -43,27 +43,46 @@ exports.createProperty = async (req, res) => {
 //Get list of properties
 exports.getProperties = async (req, res) => {
 	try {
-		// const { sortBy, order = 'asc', state, status } = req.query;
-		// const sortOptions = {};
+		const {
+			sortBy,
+			order = 'asc',
+			state,
+			status,
+			page = 1,
+			limit = 16,
+		} = req.query;
+		const sortOptions = {};
 
-		// if (sortBy) {
-		// 	sortOptions[sortBy] = order === 'asc' ? 1 : -1;
-		// }
+		if (sortBy) {
+			sortOptions[sortBy] = order === 'asc' ? 1 : -1;
+		}
 
-		// const filterOptions = {};
+		const filterOptions = {};
 
-		// if (state) {
-		// 	filterOptions.state = state;
-		// }
+		if (state) {
+			filterOptions.state = state;
+		}
 
-		// if (status) {
-		// 	filterOptions.status = status;
-		// }
+		if (status) {
+			filterOptions.status = status;
+		}
 
-		// const properties = await Property.find(filterOptions).sort(sortOptions);
-		// res.status(200).json(properties);
-		const properties = await Property.find();
-		res.status(200).json(properties);
+		const skip = (page - 1) * limit;
+
+		const properties = await Property.find(filterOptions)
+			.sort(sortOptions)
+			.skip(skip)
+			.limit(parseInt(limit, 10));
+
+		const totalProperties = await Property.countDocuments(filterOptions);
+		res
+			.status(200)
+			.json({
+				properties,
+				totalProperties,
+				totalPages: Math.ceil(totalProperties / limit),
+				currentPage: parseInt(page, 10),
+			});
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}
