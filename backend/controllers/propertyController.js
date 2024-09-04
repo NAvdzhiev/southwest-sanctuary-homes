@@ -1,4 +1,5 @@
 const Property = require('../models/Property');
+const User = require('../models/User');
 const Booking = require('../models/Booking');
 const Offer = require('../models/Offer');
 
@@ -31,6 +32,14 @@ exports.createProperty = async (req, res) => {
 
 		const property = new Property(propertyData);
 		await property.save();
+
+		const user = await User.findById(propertyData.agent);
+		if (!user) {
+			return res.status(404).json({ message: 'Agent not found!' });
+		}
+
+		user.properties.push(property._id);
+		await user.save();
 		res.status(201).json({
 			message: 'Property Created Successfully!',
 			property: property,
@@ -51,13 +60,13 @@ exports.getProperties = async (req, res) => {
 			page = 1,
 			limit = 16,
 		} = req.query;
+
 		const sortOptions = {};
+		const filterOptions = {};
 
 		if (sortBy) {
 			sortOptions[sortBy] = order === 'asc' ? 1 : -1;
 		}
-
-		const filterOptions = {};
 
 		if (state) {
 			filterOptions.state = state;
@@ -70,19 +79,18 @@ exports.getProperties = async (req, res) => {
 		const skip = (page - 1) * limit;
 
 		const properties = await Property.find(filterOptions)
+			.populate('agent', 'firstName lastName')
 			.sort(sortOptions)
 			.skip(skip)
 			.limit(parseInt(limit, 10));
 
 		const totalProperties = await Property.countDocuments(filterOptions);
-		res
-			.status(200)
-			.json({
-				properties,
-				totalProperties,
-				totalPages: Math.ceil(totalProperties / limit),
-				currentPage: parseInt(page, 10),
-			});
+		res.status(200).json({
+			properties,
+			totalProperties,
+			totalPages: Math.ceil(totalProperties / limit),
+			currentPage: parseInt(page, 10),
+		});
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}

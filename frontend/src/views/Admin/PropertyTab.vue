@@ -33,15 +33,19 @@
 						/>
 					</td>
 					<td>{{ property.title }}</td>
-					<td>{{ property.price }}</td>
+					<td>
+						{{ formatPrice(property.price) }}
+					</td>
 					<td>{{ property.address }}</td>
 					<td>{{ property.city }} {{ property.state }}</td>
 					<td>{{ property.footage }} sqft</td>
 					<td>{{ property.bedrooms }} bds</td>
 					<td>{{ property.bathrooms }} bts</td>
 					<td>{{ property.status }}</td>
-					<td>{{ property.createdAt }}</td>
-					<td>{{ property.agent }}</td>
+					<td>{{ formatDate(property.createdAt) }}</td>
+					<td v-if="property.agent">
+						{{ property.agent.firstName }} {{ property.agent.lastName }}
+					</td>
 					<td>{{ property.offers.length }}</td>
 					<td><i class="fa fa-solid fa-pencil"></i></td>
 					<td><i class="fa fa-solid fa-trash"></i></td>
@@ -64,6 +68,18 @@ onMounted(() => {
 });
 
 const properties = computed(() => propertyStore.properties);
+
+function formatPrice(price) {
+	return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function formatDate(dateString) {
+	const date = new Date(dateString);
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, '0');
+	const day = String(date.getDate()).padStart(2, '0');
+	return `${day}-${month}-${year}`;
+}
 </script>
 
 <style scoped>

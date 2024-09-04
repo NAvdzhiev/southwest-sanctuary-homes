@@ -41,18 +41,6 @@ export const usePropertyStore = defineStore('property', {
 			} finally {
 				this.loading = false;
 			}
-
-			// this.loading = true;
-			// try {
-			// 	const response = await api.get('api/properties');
-			// 	this.properties = response.data;
-			// } catch (error) {
-			// 	this.error = error.response
-			// 		? error.response.data.message
-			// 		: error.message;
-			// } finally {
-			// 	this.loading = false;
-			// }
 		},
 
 		setSort(sortBy, order) {

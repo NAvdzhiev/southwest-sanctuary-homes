@@ -12,9 +12,9 @@
 		<label for="status-filter">Filter By Status:</label>
 		<select id="status-filter" v-model="filterStatus" @change="updateFilter">
 			<option value="">All</option>
-			<option value="new">New</option>
-			<option value="open house">Open House</option>
-			<option value="pending">Pending</option>
+			<option value="New">New</option>
+			<option value="Open House">Open House</option>
+			<option value="Pending">Pending</option>
 		</select>
 	</div>
 </template>

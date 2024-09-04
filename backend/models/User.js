@@ -35,7 +35,7 @@ const userSchema = new Schema(
 			enum: ['admin', 'agent', 'designer'],
 			default: 'agent',
 		},
-		properties: [{ type: Schema.Types.ObjectId, ref: 'Property' }],
+		properties: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Property' }],
 	},
 	{
 		timestamps: true,

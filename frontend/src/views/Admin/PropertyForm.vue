@@ -24,7 +24,7 @@ const initialFieldsValues = ref({});
 onMounted(async () => {
 	await userStore.fetchUsers();
 
-	const agents = userStore.users.filter((user) => user.role === 'Agent');
+	const agents = userStore.users.filter((user) => user.role === 'agent');
 
 	fields.value = [
 		{
@@ -111,11 +111,10 @@ onMounted(async () => {
 			name: 'price',
 			id: 'price',
 			label: 'Property Price',
-			type: 'text',
+			type: 'number',
 			placeholder: 'Enter Property Price',
 			validation: {
 				required: true,
-				pattern: /\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})/,
 			},
 		},
 		{
@@ -176,7 +175,7 @@ onMounted(async () => {
 				text: `${agent.firstName} ${agent.lastName}`,
 			})),
 			validation: {
-				required: false,
+				required: true,
 			},
 		},
 	];
@@ -201,7 +200,7 @@ const handleSubmit = async (formData) => {
 	try {
 		await propertyStore.createProperty(formData);
 		console.log('Property added successfully!');
-		router.replace('/properties');
+		router.replace('/dashboard/property-tab');
 	} catch (error) {
 		console.log('Failed to submit property:', error);
 	}
