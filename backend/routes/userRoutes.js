@@ -4,6 +4,7 @@ const {
 	loginUser,
 	getUserProfile,
 	getUsers,
+	deleteUser,
 } = require('../controllers/userController');
 const { protect, admin } = require('../middleware/auth');
 const {
@@ -31,5 +32,7 @@ router.post('/login', loginUser);
 router.get('/profile', protect, getUserProfile);
 
 router.get('/users', protect, admin, getUsers);
+
+router.delete('/user/:id', protect, admin, deleteUser);
 
 module.exports = router;

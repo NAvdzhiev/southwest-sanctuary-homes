@@ -8,12 +8,14 @@ const {
 	getSingleProperty,
 	createBooking,
 	createOffer,
+	deleteProperty,
 } = require('../controllers/propertyController');
 
 // Property Actions
 router.get('/', getProperties);
 router.get('/:id', getSingleProperty);
-router.post('/', upload.array('images', 10), createProperty);
+router.post('/', upload.array('images', 10), protect, admin, createProperty);
+router.delete('/:id', protect, admin, deleteProperty);
 
 // Booking Routes
 router.post('/:id/bookings', createBooking);

@@ -19,15 +19,15 @@
 				<th>Date Added</th>
 				<th>Agent</th>
 				<th>Offers</th>
-				<th>Edit</th>
-				<th>Delete</th>
+				<th v-if="isAdmin">Edit</th>
+				<th v-if="isAdmin">Delete</th>
 			</thead>
 			<tbody>
 				<tr v-for="property in properties" :key="property._id">
 					<td>
 						<img
-							:src="property.images[3]"
-							:alt="property - title"
+							:src="setTitleImage(property.images)"
+							:alt="property.title"
 							width="65"
 							height="65"
 						/>
@@ -47,8 +47,10 @@
 						{{ property.agent.firstName }} {{ property.agent.lastName }}
 					</td>
 					<td>{{ property.offers.length }}</td>
-					<td><i class="fa fa-solid fa-pencil"></i></td>
-					<td><i class="fa fa-solid fa-trash"></i></td>
+					<td v-if="isAdmin"><i class="fa fa-solid fa-pencil"></i></td>
+					<td v-if="isAdmin" @click="handleDelete(property._id)">
+						<i class="fa fa-solid fa-trash"></i>
+					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -58,10 +60,14 @@
 <script setup>
 import { computed, onMounted } from 'vue';
 import { usePropertyStore } from '@/store/propertyStore';
+import { useUserStore } from '@/store/userStore';
 import SortButton from '@/components/ui/SortButton.vue';
 import AppFilter from '@/components/ui/AppFilter.vue';
 import AppPagination from '@/components/ui/AppPagination.vue';
 const propertyStore = usePropertyStore();
+const userStore = useUserStore();
+
+const isAdmin = userStore.isAdmin;
 
 onMounted(() => {
 	propertyStore.fetchProperties();
@@ -79,6 +85,19 @@ function formatDate(dateString) {
 	const month = String(date.getMonth() + 1).padStart(2, '0');
 	const day = String(date.getDate()).padStart(2, '0');
 	return `${day}-${month}-${year}`;
+}
+
+function setTitleImage(images) {
+	const reversedImages = [...images].reverse();
+	return reversedImages[0];
+}
+
+function handleDelete(id) {
+	if (isAdmin) {
+		propertyStore.deleteProperty(id);
+	} else {
+		alert('Not authorized!');
+	}
 }
 </script>
 

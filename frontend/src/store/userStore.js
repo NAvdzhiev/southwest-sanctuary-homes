@@ -67,6 +67,15 @@ export const useUserStore = defineStore('user', {
 			}
 		},
 
+		async deleteUser(id) {
+			try {
+				await api.delete(`/api/admin/user/${id}`);
+				await this.fetchUsers();
+			} catch (error) {
+				this.error = error.response.data.message;
+			}
+		},
+
 		async init() {
 			if (this.token) {
 				this.loading = true;

@@ -9,7 +9,7 @@ export const usePropertyStore = defineStore('property', {
 		currentPage: 1,
 		property: null,
 		sortBy: 'createdAt',
-		order: 'asc',
+		order: 'desc',
 		filterState: '',
 		filterStatus: '',
 		loading: false,
@@ -103,7 +103,7 @@ export const usePropertyStore = defineStore('property', {
 		async deleteProperty(id) {
 			this.loading = true;
 			try {
-				await api.delete(`${id}`);
+				await api.delete(`/api/properties/${id}`);
 				await this.fetchProperties();
 			} catch (error) {
 				this.error = error;

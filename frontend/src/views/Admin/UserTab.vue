@@ -27,8 +27,10 @@
 					<td>{{ user.phone }}</td>
 					<td>{{ user.properties.length }}</td>
 					<td>{{ user.role }}</td>
-					<td><i class="fa fa-solid fa-pencil"></i></td>
-					<td><i class="fa fa-solid fa-trash"></i></td>
+					<td v-if="isAdmin"><i class="fa fa-solid fa-pencil"></i></td>
+					<td v-if="isAdmin" @click="handleDelete(user._id)">
+						<i class="fa fa-solid fa-trash"></i>
+					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -46,6 +48,12 @@ onMounted(() => {
 
 const users = computed(() => userStore.users);
 const isAdmin = userStore.isAdmin;
+
+function handleDelete(id) {
+	if (isAdmin) {
+		userStore.deleteUser(id);
+	}
+}
 </script>
 
 <style scoped>
