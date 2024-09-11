@@ -64,13 +64,15 @@ export const usePropertyStore = defineStore('property', {
 			this.loading = true;
 			try {
 				const response = await api.get(`/api/properties/${id}`);
-				this.property = response.data;
+				const data = response.data;
+				this.property = data;
 			} catch (error) {
 				this.error = error;
 			} finally {
 				this.loading = false;
 			}
 		},
+
 		async createProperty(propertyData) {
 			this.loading = true;
 			try {
@@ -89,11 +91,13 @@ export const usePropertyStore = defineStore('property', {
 				this.loading = false;
 			}
 		},
-		async updateProperty(id) {
+		async updateProperty(id, propertyData) {
 			this.loading = true;
 			try {
-				await api.put(`${id}`);
+				const response = await api.put(`/api/properties/${id}`, propertyData);
+				this.property = response.data.property;
 				await this.fetchProperty(id);
+				return response.data;
 			} catch (error) {
 				this.error = error;
 			} finally {
@@ -111,17 +115,5 @@ export const usePropertyStore = defineStore('property', {
 				this.loading = false;
 			}
 		},
-		setSortOptions(sortBy, order = 'asc') {
-			this.sortBy = sortBy;
-			this.order = order;
-			this.fetchProperties();
-		},
-		setFilterOptions() {
-			this.filterState = this.state;
-			this.filterStatus = this.status;
-		},
-	},
-	getters: {
-		sortedAndFilteredProperties: (state) => state.properties,
 	},
 });

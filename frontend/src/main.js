@@ -8,14 +8,13 @@ import AppFooter from './components/layouts/AppFooter.vue';
 import { useUserStore } from './store/userStore';
 
 const app = createApp(App);
-
 const pinia = createPinia();
-
-app.component('AppNavigation', AppNavigation);
-app.component('AppFooter', AppFooter);
 
 app.use(pinia);
 app.use(router);
+
+app.component('AppNavigation', AppNavigation);
+app.component('AppFooter', AppFooter);
 
 const userStore = useUserStore();
 

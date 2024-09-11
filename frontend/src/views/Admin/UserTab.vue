@@ -27,7 +27,11 @@
 					<td>{{ user.phone }}</td>
 					<td>{{ user.properties.length }}</td>
 					<td>{{ user.role }}</td>
-					<td v-if="isAdmin"><i class="fa fa-solid fa-pencil"></i></td>
+					<td v-if="isAdmin">
+						<router-link :to="`/edit-user/${user._id}`">
+							<i class="fa fa-solid fa-pencil"></i>
+						</router-link>
+					</td>
 					<td v-if="isAdmin" @click="handleDelete(user._id)">
 						<i class="fa fa-solid fa-trash"></i>
 					</td>
@@ -42,12 +46,12 @@ import { useUserStore } from '@/store/userStore';
 
 const userStore = useUserStore();
 
-onMounted(() => {
-	userStore.fetchUsers();
-});
-
 const users = computed(() => userStore.users);
 const isAdmin = userStore.isAdmin;
+
+onMounted(async () => {
+	await userStore.fetchUsers();
+});
 
 function handleDelete(id) {
 	if (isAdmin) {

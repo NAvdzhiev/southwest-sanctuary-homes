@@ -1,26 +1,29 @@
 <template>
-	<section class="single-property-container">
-		<ThumbsSlider :images="propertyStore.property.images" />
+	<div v-if="loading">
+		<h1>Loading property...</h1>
+	</div>
+	<section v-else-if="property" class="single-property-container">
+		<ThumbsSlider :images="property.images" />
 		<article class="single-property-info">
-			<h1>{{ propertyStore.property.title }}</h1>
+			<h1>{{ property.title }}</h1>
 			<div class="property-details">
 				<div class="property-bedrooms">
 					<i class="fa-solid fa-bed"></i>
-					{{ propertyStore.property.bedrooms }} bds
+					{{ property.bedrooms }} bds
 				</div>
 				<div>
 					<i class="fa-solid fa-bath"></i>
-					{{ propertyStore.property.bathrooms }} bth
+					{{ property.bathrooms }} bth
 				</div>
 				<div>
 					<i class="fa-solid fa-house"></i>
-					{{ propertyStore.property.footage }} sqft
+					{{ property.footage }} sqft
 				</div>
 			</div>
-			<p>{{ propertyStore.property.description }}</p>
+			<p>{{ property.description }}</p>
 			<h2>
 				<i class="fa-solid fa-dollar-sign"></i>
-				{{ propertyStore.property.price }}
+				{{ property.price }}
 			</h2>
 			<div class="property-actions">
 				<AppButton text="Book a Tour" />
@@ -28,22 +31,28 @@
 			</div>
 		</article>
 	</section>
+	<div v-else>
+		<p>Property not found or error fetching details.</p>
+	</div>
 </template>
 
 <script setup>
+import { onBeforeMount, computed } from 'vue';
+import { usePropertyStore } from '@/store/propertyStore';
 import ThumbsSlider from '@/components/ui/ThumbsSlider.vue';
 import AppButton from '@/components/ui/AppButton.vue';
-import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { usePropertyStore } from '@/store/propertyStore';
 
-const route = useRoute();
 const propertyStore = usePropertyStore();
+const route = useRoute();
 
-onMounted(() => {
+onBeforeMount(async () => {
 	const propertyId = route.params.id;
-	propertyStore.fetchProperty(propertyId);
+	await propertyStore.fetchProperty(propertyId);
 });
+
+const property = computed(() => propertyStore.property);
+const loading = computed(() => propertyStore.loading);
 </script>
 
 mapbox://styles/mapbox/light-v11

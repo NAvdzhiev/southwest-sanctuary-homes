@@ -47,7 +47,11 @@
 						{{ property.agent.firstName }} {{ property.agent.lastName }}
 					</td>
 					<td>{{ property.offers.length }}</td>
-					<td v-if="isAdmin"><i class="fa fa-solid fa-pencil"></i></td>
+					<td v-if="isAdmin">
+						<router-link :to="`/edit-property/${property._id}`">
+							<i class="fa fa-solid fa-pencil"></i>
+						</router-link>
+					</td>
 					<td v-if="isAdmin" @click="handleDelete(property._id)">
 						<i class="fa fa-solid fa-trash"></i>
 					</td>
@@ -69,8 +73,8 @@ const userStore = useUserStore();
 
 const isAdmin = userStore.isAdmin;
 
-onMounted(() => {
-	propertyStore.fetchProperties();
+onMounted(async () => {
+	await propertyStore.fetchProperties();
 });
 
 const properties = computed(() => propertyStore.properties);
@@ -92,13 +96,13 @@ function setTitleImage(images) {
 	return reversedImages[0];
 }
 
-function handleDelete(id) {
-	if (isAdmin) {
-		propertyStore.deleteProperty(id);
-	} else {
-		alert('Not authorized!');
+const handleDelete = async (id) => {
+	try {
+		await propertyStore.deleteProperty(id);
+	} catch (error) {
+		console.error(error.message);
 	}
-}
+};
 </script>
 
 <style scoped>

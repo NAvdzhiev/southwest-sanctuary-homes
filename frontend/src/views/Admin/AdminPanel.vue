@@ -31,7 +31,7 @@
 import { useUserStore } from '@/store/userStore';
 
 const userStore = useUserStore();
-const user = userStore.user;
+const user = userStore.userProfile;
 const isAdmin = userStore.isAdmin;
 </script>
 

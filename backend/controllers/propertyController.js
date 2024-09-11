@@ -79,7 +79,7 @@ exports.getProperties = async (req, res) => {
 		const skip = (page - 1) * limit;
 
 		const properties = await Property.find(filterOptions)
-			.populate('agent', 'firstName lastName')
+			.populate('agent', 'firstName lastName phone')
 			.sort(sortOptions)
 			.skip(skip)
 			.limit(parseInt(limit, 10));
@@ -100,10 +100,13 @@ exports.getProperties = async (req, res) => {
 exports.getSingleProperty = async (req, res) => {
 	try {
 		const property = await Property.findById(req.params.id);
+
 		if (!property) {
 			return res.status(404).json({ message: 'Property not found' });
 		}
-		res.json(property);
+		console.log(property);
+
+		res.status(200).json(property);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}
@@ -112,10 +115,57 @@ exports.getSingleProperty = async (req, res) => {
 // Update property
 exports.updateProperty = async (req, res) => {
 	try {
-		const property = await Property.findByIdAndUpdate(req.params.id, req.body, {
-			new: true,
+		const {
+			title,
+			description,
+			state,
+			footage,
+			bedrooms,
+			bathrooms,
+			price,
+			city,
+			address,
+			geolocation,
+			status,
+			agent,
+		} = req.body;
+
+		const property = await Property.findById(req.params.id);
+
+		if (!property) {
+			return res.status(404).json({ message: 'Property not found!' });
+		}
+
+		if (title) property.title = title;
+		if (description) property.description = description;
+		if (state) property.state = state;
+		if (footage) property.footage = footage;
+		if (bedrooms) property.bedrooms = bedrooms;
+		if (bathrooms) property.bathrooms = bathrooms;
+		if (price) property.price = price;
+		if (city) property.city = city;
+		if (address) property.address = address;
+		if (geolocation) property.geolocation = geolocation;
+		if (status) property.status = status;
+
+		if (agent && agent !== String(property.agent)) {
+			await User.findByIdAndUpdate(property.agent, {
+				$pull: { properties: propertyId },
+			});
+
+			await User.findByIdAndUpdate(agent, {
+				$push: { properties: propertyId },
+			});
+
+			property.agent = agent;
+		}
+
+		await property.save();
+
+		res.status(200).json({
+			message: 'Property updated successfully!',
+			property: property,
 		});
-		res.status(200).json(property);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}

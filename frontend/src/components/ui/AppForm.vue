@@ -89,7 +89,7 @@
 </template>
 
 <script setup>
-import { reactive, computed } from 'vue';
+import { reactive, computed, watch } from 'vue';
 import AppButton from './AppButton.vue';
 
 const props = defineProps({
@@ -105,12 +105,24 @@ const props = defineProps({
 		type: String,
 		default: 'Form',
 	},
+	initialFieldsValues: { type: Object, default: () => ({}) },
 	formClasses: String,
 });
 
 const formData = reactive({});
 const errors = reactive({});
 const emit = defineEmits(['handleSubmit', 'submit']);
+
+watch(
+	() => props.initialFieldsValues,
+	(newValues) => {
+		props.fields.forEach((field) => {
+			formData[field.name] = newValues[field.name] || '';
+			errors[field.name] = null;
+		});
+	},
+	{ immediate: true },
+);
 
 props.fields.forEach((field) => {
 	formData[field.name] = field.default || '';

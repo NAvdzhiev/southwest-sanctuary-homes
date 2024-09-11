@@ -1,5 +1,5 @@
 import AdminPanel from '@/views/Admin/AdminPanel.vue';
-import PropertyForm from '@/views/Admin/PropertyForm.vue';
+import AddProperty from '@/views/Admin/AddProperty.vue';
 import DesignPage from '@/views/Design/DesignPage.vue';
 import QuizStep1 from '@/views/Design/QuizStep1.vue';
 import QuizStep2 from '@/views/Design/QuizStep2.vue';
@@ -15,6 +15,8 @@ import { useUserStore } from '@/store/userStore';
 import PropertyTab from '@/views/Admin/PropertyTab.vue';
 import UserTab from '@/views/Admin/UserTab.vue';
 import RegisterUser from '@/views/Admin/RegisterUser.vue';
+import EditUser from '@/views/Admin/EditUser.vue';
+import EditProperty from '@/views/Admin/EditProperty.vue';
 
 const routes = [
 	{
@@ -71,7 +73,7 @@ const routes = [
 	{
 		path: '/add-property',
 		name: 'Add New Property',
-		component: PropertyForm,
+		component: AddProperty,
 		meta: {
 			requiresAuth: true,
 			requiresAdmin: true,
@@ -81,6 +83,26 @@ const routes = [
 		path: '/register',
 		name: 'Register User',
 		component: RegisterUser,
+		meta: {
+			requiresAuth: true,
+			requiresAdmin: true,
+		},
+	},
+	{
+		path: '/edit-user/:id',
+		name: 'Edit User',
+		component: EditUser,
+		props: true,
+		meta: {
+			requiresAuth: true,
+			requiresAdmin: true,
+		},
+	},
+	{
+		path: '/edit-property/:id',
+		name: 'Edit Property',
+		component: EditProperty,
+		props: true,
 		meta: {
 			requiresAuth: true,
 			requiresAdmin: true,

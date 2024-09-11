@@ -5,6 +5,7 @@ import router from '@/router';
 export const useUserStore = defineStore('user', {
 	//State
 	state: () => ({
+		userProfile: null,
 		user: null,
 		users: [],
 		token: localStorage.getItem('token') || null,
@@ -20,7 +21,7 @@ export const useUserStore = defineStore('user', {
 				this.token = response.data.token;
 				localStorage.setItem('token', this.token);
 				api.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
-				await this.fetchUser();
+				await this.fetchUserProfile();
 				router.replace('/dashboard');
 			} catch (error) {
 				this.error = error.response.data.message;
@@ -29,10 +30,23 @@ export const useUserStore = defineStore('user', {
 			}
 		},
 
-		async fetchUser() {
+		async fetchUserProfile() {
 			this.loading = true;
 			try {
 				const response = await api.get('/api/admin/profile');
+				this.userProfile = response.data;
+			} catch (error) {
+				this.error =
+					error.response?.data?.message || 'Failed to fetch user data';
+			} finally {
+				this.loading = false;
+			}
+		},
+
+		async fetchUserById(id) {
+			this.loading = true;
+			try {
+				const response = await api.get(`/api/admin/user/${id}`);
 				this.user = response.data;
 			} catch (error) {
 				this.error =
@@ -67,6 +81,22 @@ export const useUserStore = defineStore('user', {
 			}
 		},
 
+		async updateUser(id, userData) {
+			this.loading = true;
+			try {
+				const response = await api.put(`/api/admin/user/${id}`, userData);
+				this.user = response.data.user;
+				await this.fetchUsers();
+				return response.data;
+			} catch (error) {
+				this.error = error.response
+					? error.response.data.message
+					: error.message;
+			} finally {
+				this.loading = false;
+			}
+		},
+
 		async deleteUser(id) {
 			try {
 				await api.delete(`/api/admin/user/${id}`);
@@ -82,7 +112,7 @@ export const useUserStore = defineStore('user', {
 				try {
 					api.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
 					const response = await api.get('/api/admin/profile');
-					this.user = response.data;
+					this.userProfile = response.data;
 				} catch (error) {
 					this.error =
 						error.response?.data?.message || 'Failed to fetch user data';
@@ -96,9 +126,9 @@ export const useUserStore = defineStore('user', {
 	},
 
 	getters: {
-		userRole: (state) => state.user?.role || null,
-		isAdmin: (state) => state.user?.role === 'admin',
-		isAgent: (state) => state.user?.role === 'agent',
+		userRole: (state) => state.userProfile?.role || null,
+		isAdmin: (state) => state.userProfile?.role === 'admin',
+		isAgent: (state) => state.userProfile?.role === 'agent',
 		isAuthenticated: (state) => !!state.token,
 	},
 });

@@ -86,6 +86,47 @@ exports.getUsers = async (req, res) => {
 	}
 };
 
+exports.getUserById = async (req, res) => {
+	try {
+		const user = await User.findById(req.params.id);
+
+		if (user) {
+			res.json(user);
+		} else {
+			res.status(404).json({ message: 'No users found!' });
+		}
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
+};
+
+exports.updateUser = async (req, res) => {
+	try {
+		const { firstName, lastName, email, phone, role, properties } = req.body;
+
+		const user = await User.findById(req.params.id);
+
+		if (!user) {
+			return res.status(404).json({ message: 'User not found!' });
+		}
+
+		if (firstName) user.firstName = firstName;
+		if (lastName) user.lastName = lastName;
+		if (email) user.email = email;
+		if (phone) user.phone = phone;
+		if (role) user.role = role;
+
+		await user.save();
+
+		res.status(200).json({
+			message: 'User updated successfully',
+			user,
+		});
+	} catch (error) {
+		res.status(400).json({ message: error.message });
+	}
+};
+
 exports.deleteUser = async (req, res) => {
 	try {
 		await User.findByIdAndDelete(req.params.id);
