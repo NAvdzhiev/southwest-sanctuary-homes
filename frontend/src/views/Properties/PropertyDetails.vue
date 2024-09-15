@@ -23,7 +23,7 @@
 			<p>{{ property.description }}</p>
 			<h2>
 				<i class="fa-solid fa-dollar-sign"></i>
-				{{ property.price }}
+				{{ formatPrice(property.price) }}
 			</h2>
 			<div class="property-actions">
 				<AppButton text="Book a Tour" />
@@ -53,6 +53,10 @@ onBeforeMount(async () => {
 
 const property = computed(() => propertyStore.property);
 const loading = computed(() => propertyStore.loading);
+
+function formatPrice(price) {
+	return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
 </script>
 
 mapbox://styles/mapbox/light-v11
@@ -62,10 +66,12 @@ mapbox://styles/mapbox/light-v11
 	background-color: var(--container-color);
 	border-radius: 24px;
 	padding: 30px;
+	max-width: 65%;
+	margin: auto;
 }
 
 .single-property-info {
-	max-width: 65%;
+	max-width: 80%;
 	margin: 100px auto 20px;
 	text-align: center;
 }

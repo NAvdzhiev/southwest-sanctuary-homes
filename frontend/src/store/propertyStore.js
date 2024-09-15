@@ -26,7 +26,7 @@ export const usePropertyStore = defineStore('property', {
 					state: this.filterState,
 					status: this.filterStatus,
 					page: this.currentPage,
-					limit: 16,
+					limit: 12,
 				};
 
 				const response = await api.get('/api/properties', { params });

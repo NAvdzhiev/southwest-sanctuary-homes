@@ -58,7 +58,7 @@ exports.getProperties = async (req, res) => {
 			state,
 			status,
 			page = 1,
-			limit = 16,
+			limit = 12,
 		} = req.query;
 
 		const sortOptions = {};
@@ -104,7 +104,6 @@ exports.getSingleProperty = async (req, res) => {
 		if (!property) {
 			return res.status(404).json({ message: 'Property not found' });
 		}
-		console.log(property);
 
 		res.status(200).json(property);
 	} catch (error) {

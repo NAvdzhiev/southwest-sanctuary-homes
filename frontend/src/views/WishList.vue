@@ -1,16 +1,18 @@
 <template>
-    <h1>Whish List</h1>
-    <PropertyCardContainer>
-        <PropertyCard v-for="property in wishlist" 
-            :key="property.id" 
-            :id="property.id" 
-            :title="property.title"
-            :imageSrc="property.imageSrc"
-            :bedrooms="property.bedrooms"
-            :bathrooms="property.bathrooms"
-            :footage="property.footage"
-            :price="property.price"/>
-    </PropertyCardContainer>
+	<h1>Whish List</h1>
+	<PropertyCardContainer>
+		<PropertyCard
+			v-for="property in wishlist"
+			:key="property.id"
+			:id="property.id"
+			:title="property.title"
+			:imageUrl="property.imageUrl"
+			:bedrooms="property.bedrooms"
+			:bathrooms="property.bathrooms"
+			:footage="property.footage"
+			:price="property.price"
+		/>
+	</PropertyCardContainer>
 </template>
 
 <script setup>

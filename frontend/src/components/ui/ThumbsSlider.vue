@@ -72,7 +72,7 @@ const setThumbsSwiper = (swiper) => {
 	height: 100%;
 	object-fit: cover;
 	border-radius: 12px;
-	height: 600px;
+	height: 500px;
 }
 
 .thumbs-swiper {

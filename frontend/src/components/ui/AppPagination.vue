@@ -32,7 +32,7 @@ import { usePropertyStore } from '@/store/propertyStore';
 const propertyStore = usePropertyStore();
 const currentPage = computed(() => propertyStore.currentPage);
 const totalPages = computed(() =>
-	Math.ceil(propertyStore.totalProperties / 16),
+	Math.ceil(propertyStore.totalProperties / 12),
 );
 
 const pages = computed(() => {
