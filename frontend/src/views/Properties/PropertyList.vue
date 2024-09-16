@@ -135,7 +135,7 @@
 					extensive amenities, and exclusive locations.
 				</p>
 			</ContentContainer>
-			<ContentContainer imageSrc="market-trends-img.jpg" reverse>
+			<ContentContainer imageSrc="listing-01.jpg" reverse>
 				<h4>
 					New <br />
 					Developments
@@ -260,14 +260,14 @@ function setTitleImage(images) {
 }
 
 .property-types__row-1 {
-	display: flex;
-	justify-content: space-between;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
 	gap: 20px;
 }
 
 .property-types__row-2 {
-	display: flex;
-	justify-content: space-around;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 	gap: 20px;
 	width: 70%;
 	margin: auto;
@@ -275,6 +275,7 @@ function setTitleImage(images) {
 
 .property-list__types .content-container {
 	gap: 25px;
+	padding: 20px;
 }
 
 .property-list__types >>> .content-image {
@@ -292,13 +293,14 @@ function setTitleImage(images) {
 }
 
 .insights-icons {
-	display: flex;
-	justify-content: space-between;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	margin-top: 7%;
 }
 
 .insights-icons__row {
-	display: flex;
-	gap: 30px;
+	display: grid;
+	grid-template-columns: 1fr 3fr;
 	align-items: center;
 }
 
@@ -308,7 +310,7 @@ function setTitleImage(images) {
 }
 
 .insights-icons__row h5 {
-	font-size: 18px;
-	font-weight: bold;
+	font-size: 16px;
+	font-weight: 500;
 }
 </style>

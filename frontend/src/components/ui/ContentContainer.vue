@@ -50,6 +50,14 @@ const imageUrl = computed(() => {
 	width: 90%;
 }
 
+.content >>> h2:first-child {
+	margin-top: 5%;
+}
+
+.content >>> p {
+	margin-top: 7%;
+}
+
 .content-image {
 	border-radius: 12px;
 }
