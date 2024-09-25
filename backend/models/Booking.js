@@ -8,6 +8,12 @@ const bookingSchema = new Schema(
 		lastName: { type: String, required: true },
 		email: { type: String, required: true },
 		phone: { type: String, required: true },
+		// type: {
+		// 	type: String,
+		// 	enum: ['in person', 'video chat'],
+		// 	default: 'in person',
+		// 	required: true,
+		// },
 		date: { type: Date, required: true },
 		timeSlot: { type: String, required: true },
 	},

@@ -180,20 +180,42 @@ exports.deleteProperty = async (req, res) => {
 	}
 };
 
-// Book property tour
+// Get available time slots
+exports.availableSlots = async (req, res) => {
+	const { date, propertyId } = req.query;
+
+	const bookings = await Booking.find({ date, property: propertyId });
+	const timeSlots = [
+		'11:00 AM - 12:00 PM',
+		'12:00 PM - 1:00 PM',
+		'1:00 PM - 2:00 PM',
+		'2:00 PM - 3:00 PM',
+		'3:00 PM - 4:00 PM',
+		'4:00 PM - 5:00 PM',
+		'5:00 PM - 6:00 PM',
+		'6:00 PM - 7:00 PM',
+	];
+	const bookedSlots = bookings.map((b) => b.timeSlot);
+	const availableSlots = timeSlots.filter(
+		(slot) => !bookedSlots.includes(slot),
+	);
+	res.status(200).json({ availableSlots });
+	console.log(availableSlots);
+};
+
+// Book a property tour
 exports.createBooking = async (req, res) => {
 	try {
-		const propertyId = req.params;
+		const propertyId = req.params.id; // Ensure you're accessing the ID correctly
 		const { firstName, lastName, phone, email, date, timeSlot } = req.body;
 
-		const property = await Property.findById(propertyId);
-
-		if (!property) {
-			return res.status(404).json({ error: 'Property Not Found!' });
+		// Check if propertyId is valid
+		if (!propertyId) {
+			return res.status(400).json({ error: 'Property ID is required!' });
 		}
 
 		const existingBooking = await Booking.findOne({
-			propertyId,
+			property: propertyId, // Ensure you're checking against the correct field
 			date,
 			timeSlot,
 		});
@@ -204,6 +226,7 @@ exports.createBooking = async (req, res) => {
 		}
 
 		const booking = new Booking({
+			property: propertyId,
 			firstName,
 			lastName,
 			phone,
@@ -212,8 +235,21 @@ exports.createBooking = async (req, res) => {
 			timeSlot,
 		});
 		await booking.save();
-		res.status(201).json(booking);
+
+		const property = await Property.findById(propertyId);
+		if (!property) {
+			return res.status(404).json({ error: 'Property Not Found!' });
+		}
+
+		property.bookings.push(booking._id);
+		await property.save();
+
+		res.status(201).json({
+			message: 'Tour Booked Successfully!',
+			booking: booking,
+		});
 	} catch (error) {
+		console.error('Error creating booking:', error);
 		res.status(500).json({ error: error.message });
 	}
 };

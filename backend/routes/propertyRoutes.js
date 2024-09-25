@@ -10,6 +10,7 @@ const {
 	createOffer,
 	deleteProperty,
 	updateProperty,
+	availableSlots,
 } = require('../controllers/propertyController');
 
 // Property Actions
@@ -20,7 +21,8 @@ router.put('/:id', protect, admin, updateProperty);
 router.delete('/:id', protect, admin, deleteProperty);
 
 // Booking Routes
-router.post('/:id/bookings', createBooking);
+router.get('/:id/booking/available', availableSlots);
+router.post('/:id/booking', createBooking);
 
 // Offer Routes
 router.post('/:id/offers', createOffer);

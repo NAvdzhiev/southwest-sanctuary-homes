@@ -76,6 +76,20 @@
 					class="form-control"
 				/>
 
+				<!-- Date input -->
+				<input
+					v-if="field.type === 'date'"
+					v-model="formData[field.name]"
+					:type="field.name"
+					:id="field.name"
+					:name="field.name"
+					:class="{ 'is-invalid': errors[field.name] }"
+					:min="new Date().toISOString().split('T')[0]"
+					@change="(event) => updateFieldValue(field.name, event.target.value)"
+					@blur="validateField(field.name)"
+					class="form-control"
+				/>
+
 				<!-- Error Message -->
 				<div v-if="errors[field.name]" class="invalid-field-error">
 					{{ errors[field.name] }}
@@ -91,6 +105,8 @@
 <script setup>
 import { reactive, computed, watch } from 'vue';
 import AppButton from './AppButton.vue';
+// import Datepicker from '@vuepic/vue-datepicker';
+// import '@vuepic/vue-datepicker/dist/main.css';
 
 const props = defineProps({
 	fields: {
@@ -111,19 +127,20 @@ const props = defineProps({
 
 const formData = reactive({});
 const errors = reactive({});
-const emit = defineEmits(['handleSubmit', 'submit']);
+const emit = defineEmits(['submit', 'date-changed']);
 
 watch(
 	() => props.initialFieldsValues,
 	(newValues) => {
 		props.fields.forEach((field) => {
-			formData[field.name] = newValues[field.name] || '';
+			formData[field.name] = newValues[field.name] || field.default || '';
 			errors[field.name] = null;
 		});
 	},
 	{ immediate: true },
 );
 
+// Dynamically set formData and errors for each field
 props.fields.forEach((field) => {
 	formData[field.name] = field.default || '';
 	errors[field.name] = null;
@@ -149,7 +166,6 @@ const handleSubmit = () => {
 		const formDataObj = new FormData();
 		Object.keys(formData).forEach((key) => {
 			if (Array.isArray(formData[key])) {
-				// If it's an array (e.g., files), append each file separately
 				formData[key].forEach((file) => {
 					formDataObj.append(key, file);
 				});
@@ -162,6 +178,14 @@ const handleSubmit = () => {
 	}
 };
 
+const updateFieldValue = (name, value) => {
+	const field = props.fields.find((f) => f.name === name);
+	if (field) {
+		field.value = value; // Update the field value directly
+	}
+};
+
+// Validate form fields
 const validateField = (fieldName) => {
 	const field = props.fields.find((f) => f.name === fieldName);
 	if (!field || !field.validation) return true;
@@ -169,6 +193,7 @@ const validateField = (fieldName) => {
 	const value = formData[fieldName];
 	errors[fieldName] = null;
 
+	// General validation for required, minLength, maxLength, and pattern
 	if (field.validation.required && !value) {
 		errors[fieldName] = `${field.label} is required.`;
 		return false;
@@ -193,6 +218,7 @@ const validateField = (fieldName) => {
 		return false;
 	}
 
+	// File-specific validation
 	if (field.type === 'file' && field.validation) {
 		const files = value; // Array of files
 		if (files.length > 0) {
@@ -222,6 +248,7 @@ const validateField = (fieldName) => {
 	return true;
 };
 
+// Handle file uploads
 const handleFileUpload = (fieldName, event) => {
 	const files = Array.from(event.target.files);
 	formData[fieldName] = files; // Store the array of files in formData
