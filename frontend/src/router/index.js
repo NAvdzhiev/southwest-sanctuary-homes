@@ -121,7 +121,7 @@ const routes = [
 				meta: { requiresAuth: true, requiresAdmin: true },
 			},
 		],
-		metha: {
+		meta: {
 			requiresAuth: true,
 		},
 	},

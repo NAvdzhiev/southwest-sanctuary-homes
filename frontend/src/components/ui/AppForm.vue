@@ -105,8 +105,6 @@
 <script setup>
 import { reactive, computed, watch } from 'vue';
 import AppButton from './AppButton.vue';
-// import Datepicker from '@vuepic/vue-datepicker';
-// import '@vuepic/vue-datepicker/dist/main.css';
 
 const props = defineProps({
 	fields: {

@@ -9,7 +9,6 @@
     "build:css": "sass src/assets/scss:dist/css --no-source-map"
   },
   "dependencies": {
-    "@vuepic/vue-datepicker": "^9.0.3",
     "axios": "^1.7.3",
     "core-js": "^3.8.3",
     "mapbox-gl-vue": "^2.0.4",
