@@ -41,7 +41,7 @@
 		<AppPagination />
 	</section>
 	<section class="property-list__trends">
-		<ContentContainer imageSrc="market-trends-img.jpg" reverse>
+		<ContentContainer imageSrc="market-trends-img.png" reverse>
 			<h2>Current Market</h2>
 			<h2><span>Trends</span></h2>
 			<p class="regular">
@@ -101,7 +101,7 @@
 					experience.
 				</p>
 			</ContentContainer>
-			<ContentContainer imageSrc="market-trends-img.jpg" reverse>
+			<ContentContainer imageSrc="market-trends-img.png" reverse>
 				<h4>
 					Suburban <br />
 					Homes

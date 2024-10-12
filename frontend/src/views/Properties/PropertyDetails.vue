@@ -26,15 +26,18 @@
 				{{ formatPrice(property.price) }}
 			</h2>
 			<div class="property-actions">
-				<AppButton text="Book a Tour" @click="openBookingDialog" />
-				<AppButton text="Send an Offer" @click="openOfferDialog" />
+				<AppButton text="Book a Tour" @click="() => openDialog('booking')" />
+				<AppButton text="Send an Offer" @click="() => openDialog('offer')" />
 			</div>
 		</article>
-		<DialogWindow
-			:open="isBookingDialogOpen"
-			@close="isBookingDialogOpen = false"
-		>
-			<BookingForm />
+
+		<DialogWindow ref="dialogRef" :open="isDialogOpen" @close="closeDialog">
+			<template v-if="activeForm === 'booking'">
+				<BookingForm />
+			</template>
+			<template v-else-if="activeForm === 'offer'">
+				<OfferForm />
+			</template>
 		</DialogWindow>
 	</section>
 
@@ -44,16 +47,17 @@
 </template>
 
 <script setup>
-import { onMounted, computed, ref } from 'vue';
+import { onMounted, computed, ref, nextTick } from 'vue';
 import { usePropertyStore } from '@/store/propertyStore';
 import ThumbsSlider from '@/components/ui/ThumbsSlider.vue';
 import AppButton from '@/components/ui/AppButton.vue';
 import DialogWindow from '@/components/layouts/DialogWindow.vue';
 import BookingForm from '@/components/property/BookingForm.vue';
+import OfferForm from '@/components/property/OfferForm.vue';
 import { useRoute } from 'vue-router';
 
-const isOfferDialogOpen = ref(false);
-const isBookingDialogOpen = ref(false);
+const isDialogOpen = ref(false);
+const activeForm = ref(null);
 
 const propertyStore = usePropertyStore();
 const route = useRoute();
@@ -66,12 +70,16 @@ onMounted(async () => {
 const property = computed(() => propertyStore.property);
 const loading = computed(() => propertyStore.loading);
 
-const openOfferDialog = () => {
-	isOfferDialogOpen.value = true;
+const openDialog = async (formType) => {
+	console.log(`Opening ${formType} Dialog`);
+	activeForm.value = formType; // Set the form to be displayed ('booking' or 'offer')
+	await nextTick(); // Ensure the state is updated before showing the dialog
+	isDialogOpen.value = true; // Open the dialog
 };
 
-const openBookingDialog = () => {
-	isBookingDialogOpen.value = true;
+const closeDialog = () => {
+	isDialogOpen.value = false;
+	activeForm.value = null; // Reset the form after closing the dialog
 };
 
 function formatPrice(price) {

@@ -15,9 +15,12 @@ export const useOfferStore = defineStore('offer', {
 				console.error('Error fetching offers:', error);
 			}
 		},
-		async sendOffer(offerData) {
+		async sendOffer(offerData, propertyId) {
 			try {
-				const response = await api.post('', offerData);
+				const response = await api.post(
+					`/api/properties/${propertyId}/offers`,
+					offerData,
+				);
 				this.offers.push(response.data);
 			} catch (error) {
 				console.error('Error submitting offer:', error);

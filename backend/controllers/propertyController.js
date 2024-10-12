@@ -206,16 +206,15 @@ exports.availableSlots = async (req, res) => {
 // Book a property tour
 exports.createBooking = async (req, res) => {
 	try {
-		const propertyId = req.params.id; // Ensure you're accessing the ID correctly
+		const propertyId = req.params.id;
 		const { firstName, lastName, phone, email, date, timeSlot } = req.body;
 
-		// Check if propertyId is valid
 		if (!propertyId) {
 			return res.status(400).json({ error: 'Property ID is required!' });
 		}
 
 		const existingBooking = await Booking.findOne({
-			property: propertyId, // Ensure you're checking against the correct field
+			property: propertyId,
 			date,
 			timeSlot,
 		});
@@ -257,16 +256,16 @@ exports.createBooking = async (req, res) => {
 //Create offer
 exports.createOffer = async (req, res) => {
 	try {
-		const { propertyId } = req.params;
+		const propertyId = req.params.id;
 		const { firstName, lastName, email, phone, offerAmount, message } =
 			req.body;
 
-		const property = Property.findById(propertyId);
-		if (!property) {
-			return res.status(404).json({ error: 'Property not found!' });
+		if (!propertyId) {
+			return res.status(400).json({ error: 'Property ID is required!' });
 		}
 
 		const offer = new Offer({
+			property: propertyId,
 			firstName,
 			lastName,
 			email,
@@ -275,6 +274,11 @@ exports.createOffer = async (req, res) => {
 			message,
 		});
 		await offer.save();
+		const property = await Property.findById(propertyId);
+
+		property.offers.push(offer._id);
+		await property.save();
+
 		res.status(201).json(offer);
 	} catch (error) {
 		res.status(500).json({ error: error.message });
