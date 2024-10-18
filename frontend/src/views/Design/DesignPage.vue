@@ -26,7 +26,7 @@
 					ensuring every detail aligns with your personal style and needs.
 				</p>
 			</ContentContainer>
-			<ContentContainer imageSrc="sofa.svg" reverse>
+			<ContentContainer imageSrc="analytics.svg" reverse>
 				<h4>Research</h4>
 				<p class="small">
 					Our research process involves analyzing the design trends, materials,

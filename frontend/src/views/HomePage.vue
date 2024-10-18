@@ -62,8 +62,8 @@
 		</ContentContainer>
 	</section>
 	<section class="home__design-section">
-		<AppSlider />
-		<AppSlider />
+		<AppSlider :image-urls="listingsFirstRow" :slides-per-view="4" />
+		<AppSlider :image-urls="listingsSecondRow" :slides-per-view="4" />
 	</section>
 </template>
 
@@ -89,6 +89,28 @@ function setTitleImage(images) {
 	const reversedImages = [...images].reverse();
 	return reversedImages[0];
 }
+
+const listingsFirstRow = [
+	require('@/assets/images/listing-01.jpg'),
+	require('@/assets/images/listing-03.jpg'),
+	require('@/assets/images/listing-03.jpg'),
+	require('@/assets/images/listing-04.jpg'),
+	require('@/assets/images/listing-01.jpg'),
+	require('@/assets/images/listing-03.jpg'),
+	require('@/assets/images/listing-03.jpg'),
+	require('@/assets/images/listing-04.jpg'),
+];
+
+const listingsSecondRow = [
+	require('@/assets/images/listing-01.jpg'),
+	require('@/assets/images/listing-03.jpg'),
+	require('@/assets/images/listing-03.jpg'),
+	require('@/assets/images/listing-04.jpg'),
+	require('@/assets/images/listing-01.jpg'),
+	require('@/assets/images/listing-03.jpg'),
+	require('@/assets/images/listing-03.jpg'),
+	require('@/assets/images/listing-04.jpg'),
+];
 </script>
 
 <style scoped>
