@@ -222,6 +222,7 @@ const imageUrlsSecondRow = [
 
 .design__testimonial-section h1 {
 	font-size: 48px;
+	line-height: 50px;
 	text-align: center;
 	font-weight: 500;
 }
