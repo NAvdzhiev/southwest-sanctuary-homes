@@ -1,6 +1,6 @@
 <template>
 	<swiper
-		:slides-per-view="4"
+		:slides-per-view="slidesPerView"
 		space-between="24"
 		loop
 		:speed="5000"
@@ -32,24 +32,18 @@ import 'swiper/swiper-bundle.css';
 import { Autoplay } from 'swiper/modules';
 import { ref } from 'vue';
 
-// Example image names (you can replace these with your actual image names)
-const imageNames = [
-	'listing-01.jpg',
-	'listing-02.jpg',
-	'listing-03.jpg',
-	'listing-04.jpg',
-	'listing-01.jpg',
-	'listing-02.jpg',
-	'listing-03.jpg',
-	'listing-04.jpg',
-	// Add more images here
-];
-
-// Use require or new URL to dynamically load images
-const imageUrls = imageNames.map((name) => require(`@/assets/images/${name}`));
-
-// Alternatively, with Vite and ES modules:
-// const imageUrls = imageNames.map(name => new URL(`@/assets/images/${name}`, import.meta.url).href);
+defineProps({
+	imageUrls: {
+		type: Array,
+		required: true,
+		default: () => [],
+	},
+	slidesPerView: {
+		type: Number,
+		required: false,
+		default: 4,
+	},
+});
 
 const fullscreenVisible = ref(false);
 const fullscreenImage = ref('');

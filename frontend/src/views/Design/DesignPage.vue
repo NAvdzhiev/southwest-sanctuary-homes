@@ -74,6 +74,11 @@
 			</ContentContainer>
 		</div>
 	</section>
+	<section class="design__slider-section">
+		<h1>Our Portfolio</h1>
+		<AppSlider :image-urls="imageUrlsFirstRow" :slides-per-view="6" />
+		<AppSlider :image-urls="imageUrlsSecondRow" :slides-per-view="6" />
+	</section>
 	<section class="design__virtual-design-section">
 		<ContentContainer imageSrc="online-consultation.jpg" reverse>
 			<h2>Online <span>Consultation</span></h2>
@@ -104,10 +109,49 @@
 			<AppButton text="START NOW" to="/step-1" />
 		</ContentContainer>
 	</section>
+	<section class="design__testimonial-section">
+		<h1>
+			Love notes from <br />
+			<span>our clients</span>
+		</h1>
+		<TestimonialSection />
+	</section>
 </template>
 <script setup>
 import ContentContainer from '@/components/ui/ContentContainer.vue';
 import AppButton from '@/components/ui/AppButton.vue';
+import AppSlider from '@/components/ui/AppSlider.vue';
+import TestimonialSection from '@/components/design/TestimonialSection.vue';
+
+const imageUrlsFirstRow = [
+	require('@/assets/images/kitchen/kitchen-02.webp'),
+	require('@/assets/images/living-room/living-room-09.jpeg'),
+	require('@/assets/images/kitchen/kitchen-08.webp'),
+	require('@/assets/images/living-room/living-room-01.png'),
+	require('@/assets/images/kitchen/kitchen-03.webp'),
+	require('@/assets/images/living-room/living-room-05.jpeg'),
+	require('@/assets/images/kitchen/kitchen-02.webp'),
+	require('@/assets/images/living-room/living-room-09.jpeg'),
+	require('@/assets/images/kitchen/kitchen-08.webp'),
+	require('@/assets/images/living-room/living-room-01.png'),
+	require('@/assets/images/kitchen/kitchen-03.webp'),
+	require('@/assets/images/living-room/living-room-05.jpeg'),
+];
+
+const imageUrlsSecondRow = [
+	require('@/assets/images/kitchen/kitchen-07.webp'),
+	require('@/assets/images/living-room/living-room-08.jpeg'),
+	require('@/assets/images/kitchen/kitchen-10.webp'),
+	require('@/assets/images/living-room/living-room-04.jpeg'),
+	require('@/assets/images/kitchen/kitchen-12.webp'),
+	require('@/assets/images/living-room/living-room-02.jpeg'),
+	require('@/assets/images/kitchen/kitchen-07.webp'),
+	require('@/assets/images/living-room/living-room-08.jpeg'),
+	require('@/assets/images/kitchen/kitchen-10.webp'),
+	require('@/assets/images/living-room/living-room-04.jpeg'),
+	require('@/assets/images/kitchen/kitchen-12.webp'),
+	require('@/assets/images/living-room/living-room-02.jpeg'),
+];
 </script>
 
 <style scoped>
@@ -138,12 +182,26 @@ import AppButton from '@/components/ui/AppButton.vue';
 	margin-bottom: 50px;
 }
 
+.design__process-steps--row:nth-of-type(2) .content-container {
+	margin-bottom: 150px;
+}
+
 .design__process-steps--row >>> .content-image {
 	width: 120px;
 }
 
 .design__process-steps--row h4 {
 	text-transform: uppercase;
+}
+
+.design__slider-section {
+	margin-bottom: 150px;
+}
+
+.design__slider-section h1 {
+	font-size: 48px;
+	text-align: center;
+	font-weight: 500;
 }
 
 .design__virtual-design-section >>> .content-image {
@@ -154,5 +212,21 @@ import AppButton from '@/components/ui/AppButton.vue';
 .design__virtual-design-section .content-container,
 .design__inperson-design-section .content-container {
 	gap: 150px;
+}
+
+.design__testimonial-section {
+	background-color: var(--container-color);
+	padding: 30px;
+	border-radius: 24px;
+}
+
+.design__testimonial-section h1 {
+	font-size: 48px;
+	text-align: center;
+	font-weight: 500;
+}
+
+.design__testimonial-section h1 > span {
+	color: var(--accent-color);
 }
 </style>

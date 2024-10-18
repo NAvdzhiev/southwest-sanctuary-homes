@@ -1,135 +1,137 @@
 <template>
-	<div class="testimonials-slider">
-		<button class="nav-button prev" @click="prevSlide">&lt;</button>
-
-		<div class="slides-container" ref="slidesContainer">
-			<div
-				class="slides"
-				:style="{ transform: `translateX(-${currentSlide * slideWidth}px)` }"
-			>
-				<div
-					class="slide"
-					v-for="(testimonial, index) in testimonials"
-					:key="index"
-					:style="{ minWidth: `${slideWidth}px` }"
-				>
-					<div class="testimonial">
-						<p class="testimonial-text">{{ testimonial.text }}</p>
-						<h3 class="testimonial-author">{{ testimonial.author }}</h3>
-					</div>
+	<div class="testimonial-slider__container">
+		<swiper
+			:slides-per-view="3"
+			space-between="24"
+			loop
+			:navigation="{
+				nextEl: '.custom-buttons__next',
+				prevEl: '.custom-buttons__prev',
+			}"
+			:modules="[Navigation]"
+		>
+			<swiper-slide v-for="(testimonial, index) in testimonials" :key="index">
+				<div class="testimonial-card">
+					<p class="testimonial-slider__message">{{ testimonial.message }}</p>
+					<p class="testimonial-slider__author">- {{ testimonial.author }}</p>
 				</div>
-			</div>
-		</div>
+			</swiper-slide>
+		</swiper>
+	</div>
 
-		<button class="nav-button next" @click="nextSlide">&gt;</button>
+	<div class="custom-buttons">
+		<div class="custom-buttons__prev">
+			<svg
+				id="Layer_2"
+				height="512"
+				viewBox="0 0 24 24"
+				width="512"
+				xmlns="http://www.w3.org/2000/svg"
+				data-name="Layer 2"
+			>
+				<path
+					d="m22 11h-17.586l5.293-5.293a1 1 0 1 0 -1.414-1.414l-7 7a1 1 0 0 0 0 1.414l7 7a1 1 0 0 0 1.414-1.414l-5.293-5.293h17.586a1 1 0 0 0 0-2z"
+				/>
+			</svg>
+		</div>
+		<div class="custom-buttons__next">
+			<svg
+				id="Layer_2"
+				height="512"
+				viewBox="0 0 24 24"
+				width="512"
+				xmlns="http://www.w3.org/2000/svg"
+				data-name="Layer 2"
+			>
+				<path
+					d="m22.707 11.293-7-7a1 1 0 0 0 -1.414 1.414l5.293 5.293h-17.586a1 1 0 0 0 0 2h17.586l-5.293 5.293a1 1 0 1 0 1.414 1.414l7-7a1 1 0 0 0 0-1.414z"
+				/>
+			</svg>
+		</div>
 	</div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/swiper-bundle.css';
+import { Navigation } from 'swiper/modules';
 
-const testimonials = ref([
-	{ text: 'This is the best service I have ever used!', author: 'John Doe' },
-	{ text: 'Amazing experience, highly recommend!', author: 'Jane Smith' },
-	{ text: 'I will definitely use this service again!', author: 'Bob Johnson' },
+// Example testimonials data
+const testimonials = [
 	{
-		text: 'Exceptional quality and great customer service!',
-		author: 'Emily Davis',
+		message: `"Our renovation experience with Southwest Sanctuary Homes was seamless and stress-free. The team was incredibly responsive and the final result was exactly what we wanted."`,
+		author: 'Emily R.',
 	},
-	{ text: 'Absolutely fantastic!', author: 'Mike Wilson' },
-	{ text: 'I had a wonderful time!', author: 'Sara Smith' },
-]);
-
-const currentSlide = ref(0);
-const slideWidth = ref(0);
-const slidesContainer = ref(null);
-
-onMounted(() => {
-	updateSlideWidth();
-	window.addEventListener('resize', updateSlideWidth);
-});
-
-const updateSlideWidth = () => {
-	if (slidesContainer.value) {
-		slideWidth.value = slidesContainer.value.clientWidth / 3; // Divide by 3 to show 3 slides
-	}
-};
-
-const nextSlide = () => {
-	currentSlide.value = (currentSlide.value + 1) % testimonials.value.length;
-};
-
-const prevSlide = () => {
-	currentSlide.value =
-		(currentSlide.value - 1 + testimonials.value.length) %
-		testimonials.value.length;
-};
-
-onUnmounted(() => {
-	window.removeEventListener('resize', updateSlideWidth);
-});
+	{
+		message: `"The virtual consultation was so convenient. The designers were knowledgeable and made great suggestions that we hadn't considered."`,
+		author: 'Sarah K.',
+	},
+	{
+		message: `"Our renovation experience with Southwest Sanctuary Homes was seamless and stress-free. The team was incredibly responsive and the final result was exactly what we wanted."`,
+		author: 'Michael B.',
+	},
+	{
+		message: `Working with Southwest Sanctuary Homes was a dream come true. Their attention to detail and commitment to quality made our renovation exceed our expectations. We couldn't be happier with the outcome!`,
+		author: 'Jane R.',
+	},
+	{
+		message: `Southwest Sanctuary Homes transformed our outdated house into a modern, stylish home. Their design ideas were innovative, and the team executed everything flawlessly. Highly recommend!`,
+		author: 'James R.',
+	},
+	{
+		message: `"From start to finish, the process was smooth and transparent. Southwest Sanctuary Homes delivered exceptional results, and our home now looks better than we ever imagined!"`,
+		author: 'Emma L.',
+	},
+];
 </script>
 
 <style scoped>
-.testimonials-slider {
+.testimonial-slider__container {
+	margin: 50px 0;
+}
+
+.testimonial-slider__message {
+	font-size: 18px;
+	line-height: 27px;
+	text-align: center;
+	color: var(--text-color-dark);
+}
+
+.testimonial-slider__author {
+	font-size: 18px;
+	font-weight: bold;
+	text-align: center;
+	color: var(--text-color-dark);
+}
+
+.custom-buttons {
+	width: 25%;
+	margin: auto;
 	display: flex;
-	align-items: center;
-	position: relative;
-	overflow: hidden;
-	width: 100%;
+	justify-content: space-around;
 }
 
-.slides-container {
-	width: 100%;
-	overflow: hidden;
-}
-
-.slides {
-	display: flex;
-	transition: transform 0.5s ease;
-}
-
-.slide {
+.custom-buttons__next,
+.custom-buttons__prev {
+	background-color: var(--accent-color);
+	color: #fff;
+	padding: 10px;
+	border-radius: 50%;
+	cursor: pointer;
+	margin: 10px;
+	user-select: none;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	padding: 20px;
+	width: 30px;
+	height: 30px;
+	transition: background-color 0.3s ease;
 }
 
-.testimonial {
-	padding: 20px;
-	background: #f9f9f9;
-	border-radius: 8px;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-	text-align: center;
-}
-
-.testimonial-text {
-	font-size: 16px;
-	margin-bottom: 10px;
-}
-
-.testimonial-author {
-	font-size: 14px;
-	font-weight: bold;
-	text-align: right;
-}
-
-.nav-button {
-	background: transparent;
-	border: none;
-	font-size: 24px;
-	cursor: pointer;
-	z-index: 1;
-}
-
-.prev {
-	position: absolute;
-	left: 10px;
-}
-
-.next {
-	position: absolute;
-	right: 10px;
+.custom-buttons__next svg,
+.custom-buttons__prev svg {
+	width: 20px;
+	height: 20px;
+	fill: var(--text-color-dark); /* Uses the button's text color for the SVG */
 }
 </style>
