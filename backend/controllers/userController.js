@@ -7,7 +7,7 @@ exports.registerUser = async (req, res) => {
 	try {
 		const userExists = await User.findOne({ email });
 		if (userExists) {
-			return res.status(400).json({ message: 'User already exists!' });
+			return res.satatus(400).json({ message: 'User already exists!' });
 		}
 
 		const user = await User.create({
@@ -43,9 +43,6 @@ exports.loginUser = async (req, res) => {
 	try {
 		const user = await User.findOne({ email });
 		if (user && (await user.matchPassword(password))) {
-			// Set user ID in session
-			req.session.userId = user._id;
-
 			res.json({
 				_id: user._id,
 				firstName: user.firstName,
@@ -53,7 +50,7 @@ exports.loginUser = async (req, res) => {
 				email: user.email,
 				phone: user.phone,
 				role: user.role,
-				token: generateToken(user._id), // Keep this if you want token-based auth as well
+				token: generateToken(user._id),
 			});
 		} else {
 			res.status(401).json({ message: 'Invalid login data!' });
@@ -63,24 +60,9 @@ exports.loginUser = async (req, res) => {
 	}
 };
 
-exports.logoutUser = (req, res) => {
-	req.session.destroy((err) => {
-		if (err) {
-			return res
-				.status(500)
-				.json({ message: 'Could not log out, please try again.' });
-		}
-		res.json({ message: 'Logged out successfully!' });
-	});
-};
-
 exports.getUserProfile = async (req, res) => {
 	try {
-		if (!req.session.userId) {
-			return res.status(401).json({ message: 'Not authenticated!' });
-		}
-
-		const user = await User.findById(req.session.userId).select('-password');
+		const user = await User.findById(req.User._id).select('-password');
 		if (user) {
 			res.json(user);
 		} else {
@@ -93,10 +75,6 @@ exports.getUserProfile = async (req, res) => {
 
 exports.getUsers = async (req, res) => {
 	try {
-		if (!req.session.userId) {
-			return res.status(401).json({ message: 'Not authenticated!' });
-		}
-
 		const users = await User.find();
 		if (users) {
 			res.json(users);
@@ -124,7 +102,7 @@ exports.getUserById = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
 	try {
-		const { firstName, lastName, email, phone, role } = req.body;
+		const { firstName, lastName, email, phone, role, properties } = req.body;
 
 		const user = await User.findById(req.params.id);
 

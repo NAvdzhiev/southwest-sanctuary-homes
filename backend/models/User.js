@@ -24,11 +24,7 @@ const userSchema = new Schema(
 			match: [/.+@.+\..+/, 'Please enter a valid email'],
 			trim: true,
 		},
-		phone: {
-			type: String,
-			required: [true, 'Field is required!'],
-			trim: true,
-		},
+		phone: { type: String, required: [true, 'Field is required!'], trim: true },
 		password: {
 			type: String,
 			required: [true, 'Password is required!'],
@@ -46,7 +42,6 @@ const userSchema = new Schema(
 	},
 );
 
-// Pre-save hook to hash the password
 userSchema.pre('save', async function (next) {
 	if (!this.isModified('password')) {
 		return next();
@@ -57,7 +52,6 @@ userSchema.pre('save', async function (next) {
 	next();
 });
 
-// Pre-save hook to validate and format phone number
 userSchema.pre('save', function (next) {
 	const phoneNumber = parsePhoneNumberFromString(this.phone);
 	if (phoneNumber && phoneNumber.isValid()) {
@@ -68,7 +62,6 @@ userSchema.pre('save', function (next) {
 	}
 });
 
-// Method to compare entered password with stored hashed password
 userSchema.methods.matchPassword = async function (enteredPassword) {
 	return await bcrypt.compare(enteredPassword, this.password);
 };
