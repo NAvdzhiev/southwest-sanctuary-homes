@@ -3,11 +3,12 @@ import api from '../axios';
 import router from '@/router';
 
 export const useUserStore = defineStore('user', {
-	// State
+	//State
 	state: () => ({
 		userProfile: null,
 		user: null,
 		users: [],
+		token: localStorage.getItem('token') || null,
 		loading: false,
 		error: null,
 	}),
@@ -16,7 +17,10 @@ export const useUserStore = defineStore('user', {
 		async login(credentials) {
 			this.loading = true;
 			try {
-				await api.post('/api/admin/login', credentials);
+				const response = await api.post('/api/admin/login', credentials);
+				this.token = response.data.token;
+				localStorage.setItem('token', this.token);
+				api.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
 				await this.fetchUserProfile();
 				router.replace('/dashboard');
 			} catch (error) {
@@ -58,7 +62,7 @@ export const useUserStore = defineStore('user', {
 				const response = await api.get('/api/admin/users');
 				this.users = response.data;
 			} catch (error) {
-				this.error = error.response?.data?.message || 'Failed to fetch users';
+				error.response?.data?.message || 'Failed to fetch users';
 			} finally {
 				this.loading = false;
 			}
@@ -103,25 +107,20 @@ export const useUserStore = defineStore('user', {
 		},
 
 		async init() {
-			this.loading = true;
-			try {
-				const response = await api.get('/api/admin/profile');
-				this.userProfile = response.data;
-			} catch (error) {
-				this.error =
-					error.response?.data?.message || 'Failed to fetch user data';
-			} finally {
-				this.loading = false;
-			}
-		},
-
-		async logout() {
-			try {
-				await api.post('/api/logout');
-				this.userProfile = null;
-				router.replace('/login');
-			} catch (error) {
-				this.error = error.response?.data?.message || 'Failed to logout';
+			if (this.token) {
+				this.loading = true;
+				try {
+					api.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
+					const response = await api.get('/api/admin/profile');
+					this.userProfile = response.data;
+				} catch (error) {
+					this.error =
+						error.response?.data?.message || 'Failed to fetch user data';
+					this.token = null;
+					localStorage.removeItem('token');
+				} finally {
+					this.loading = false;
+				}
 			}
 		},
 	},
@@ -130,6 +129,6 @@ export const useUserStore = defineStore('user', {
 		userRole: (state) => state.userProfile?.role || null,
 		isAdmin: (state) => state.userProfile?.role === 'admin',
 		isAgent: (state) => state.userProfile?.role === 'agent',
-		isAuthenticated: (state) => !!state.userProfile, // Check if userProfile exists
+		isAuthenticated: (state) => !!state.token,
 	},
 });
