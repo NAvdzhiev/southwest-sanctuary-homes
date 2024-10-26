@@ -12,7 +12,7 @@
 				craftsman are dedicated to transforming your dreams into reality. Let us
 				help you craft a home that inspires and delights every day.
 			</p>
-			<AppButton text="DISCOVER YOUR STYLE" to="/step-1" />
+			<AppButton text="DISCOVER YOUR STYLE" to="/quiz" />
 		</ContentContainer>
 	</section>
 	<section class="design__process-steps">
@@ -91,7 +91,7 @@
 				need without the need for in-person meetings. Schedule your virtual
 				consultation today and start transforming your space with ease.
 			</p>
-			<AppButton text="START NOW" to="/step-1" />
+			<AppButton text="START NOW" to="/quiz" />
 		</ContentContainer>
 	</section>
 	<section class="design__inperson-design-section">
@@ -106,7 +106,7 @@
 				the benefits of direct interaction and immediate feedback by scheduling
 				your in-person consultation today.
 			</p>
-			<AppButton text="START NOW" to="/step-1" />
+			<AppButton text="START NOW" to="/quiz" />
 		</ContentContainer>
 	</section>
 	<section class="design__testimonial-section">

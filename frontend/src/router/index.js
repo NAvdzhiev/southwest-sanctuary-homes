@@ -3,7 +3,6 @@ import AddProperty from '@/views/Admin/AddProperty.vue';
 import DesignPage from '@/views/Design/DesignPage.vue';
 import QuizStep1 from '@/views/Design/QuizStep1.vue';
 import QuizStep2 from '@/views/Design/QuizStep2.vue';
-import QuizSummary from '@/views/Design/QuizSummary.vue';
 import HomePage from '@/views/HomePage.vue';
 import LoginPage from '@/views/LoginPage.vue';
 import NotFound from '@/views/NotFound.vue';
@@ -17,6 +16,8 @@ import UserTab from '@/views/Admin/UserTab.vue';
 import RegisterUser from '@/views/Admin/RegisterUser.vue';
 import EditUser from '@/views/Admin/EditUser.vue';
 import EditProperty from '@/views/Admin/EditProperty.vue';
+import DesignQuiz from '@/views/Design/DesignQuiz.vue';
+import QuizStep3 from '@/views/Design/QuizStep3.vue';
 
 const routes = [
 	{
@@ -39,9 +40,14 @@ const routes = [
 		path: '/design-and-renovation',
 		name: 'Design',
 		component: DesignPage,
+	},
+	{
+		path: '/quiz',
+		name: 'DesignQuiz',
+		component: DesignQuiz,
 		children: [
 			{
-				path: 'step-1',
+				path: '',
 				name: 'QuizStep1',
 				component: QuizStep1,
 			},
@@ -51,9 +57,9 @@ const routes = [
 				component: QuizStep2,
 			},
 			{
-				path: 'quiz-summary',
-				name: 'QuizSummary',
-				component: QuizSummary,
+				path: 'step-3',
+				name: 'QuizStep3',
+				component: QuizStep3,
 			},
 		],
 	},

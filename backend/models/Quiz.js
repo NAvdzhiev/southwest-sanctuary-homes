@@ -4,8 +4,12 @@ const Schema = mongoose.Schema;
 const quizSchema = new Schema(
 	{
 		selectedImages: [{ type: String, required: true }],
-		spaces: [{ type: String, required: true }],
-		numberOfSpaces: { type: Number, required: true },
+		spaces: [
+			{
+				name: { type: String, required: true },
+				count: { type: Number, required: true },
+			},
+		],
 		firstName: { type: String, required: true },
 		lastName: { type: String, required: true },
 		email: { type: String, required: true },
