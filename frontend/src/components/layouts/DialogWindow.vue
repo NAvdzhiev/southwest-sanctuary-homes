@@ -1,11 +1,12 @@
 <template>
-	<dialog v-show="open" @click.self="close">
-		<button class="close-btn" @click="close">X</button>
+	<dialog ref="dialog" @click.self="close">
+		<button class="close-btn" @click="close" aria-label="Close">X</button>
 		<slot></slot>
 	</dialog>
 </template>
+
 <script setup>
-import { watch } from 'vue';
+import { watch, ref, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
 	open: {
@@ -15,6 +16,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['close']);
+const dialog = ref(null);
 
 const close = () => {
 	emit('close');
@@ -23,13 +25,27 @@ const close = () => {
 watch(
 	() => props.open,
 	(newValue) => {
-		if (newValue) {
-			document.querySelector('dialog').showModal();
-		} else {
-			document.querySelector('dialog').close();
+		if (dialog.value) {
+			if (newValue) {
+				dialog.value.showModal();
+			} else {
+				dialog.value.close();
+			}
 		}
-	},
+	}
 );
+
+const handleEscape = (event) => {
+	if (event.key === 'Escape') close();
+};
+
+onMounted(() => {
+	window.addEventListener('keydown', handleEscape);
+});
+
+onUnmounted(() => {
+	window.removeEventListener('keydown', handleEscape);
+});
 </script>
 
 <style scoped>
@@ -54,9 +70,5 @@ dialog {
 
 dialog::backdrop {
 	background-color: rgba(0, 0, 0, 0.5);
-}
-
-dialog >>> .form-container {
-	max-width: 100%;
 }
 </style>
